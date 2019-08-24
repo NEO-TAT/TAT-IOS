@@ -7,9 +7,16 @@
 //
 
 import Foundation
+import Domain
+import Network
 
 final class Application {
   
   static let shared = Application()
+  
+  func configurateMainInterface(in window: UIWindow?) {
+    window?.rootViewController = ViewController()
+    window?.makeKeyAndVisible()
+  }
   
 }
