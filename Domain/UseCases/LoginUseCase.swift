@@ -10,5 +10,5 @@ import Foundation
 import RxSwift
 
 public protocol LoginUseCase {
-  func login(studentId: String, password: String) -> Observable<Any>
+  func login(studentId: String, password: String) -> Observable<Token>
 }
