@@ -20,7 +20,8 @@ enum APIType {
 extension APIType: TargetType {
 
   var baseURL: URL {
-    return URL(string: "https://tat.ntut.club")!
+    guard let url = URL(string: "https://tat.ntut.club") else { fatalError("failed to get domain url") }
+    return url
   }
 
   var path: String {
