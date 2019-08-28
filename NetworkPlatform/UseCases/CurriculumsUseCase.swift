@@ -24,11 +24,11 @@ final class CurriculumsUseCase: Domain.CurriculumsUseCase {
       .map([Domain.Semester].self)
   }
   
-  func courses(targetStudentId: String, year: String, semester: String) -> Observable<Any> {
+  func courses(targetStudentId: String, year: String, semester: String) -> Observable<Domain.CurriculumCourses> {
     return provider.rx.request(.courses(targetStudentId: targetStudentId, year: year, semester: semester))
       .asObservable()
       .filterSuccessfulStatusCodes()
-      .mapJSON()
+      .map(Domain.CurriculumCourses.self)
   }
   
 }
