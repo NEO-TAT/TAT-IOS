@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 import Moya
+import Domain
 
 enum APIType {
   case login(studentId: String, password: String)
@@ -19,7 +20,8 @@ enum APIType {
 extension APIType: TargetType {
   
   var baseURL: URL {
-    return  URL(string: "https://tat.ntut.club")!
+    //return  URL(string: "https://tat.ntut.club")!
+    return URL(string: "http://localhost:8080")!
   }
   
   var path: String {
@@ -67,7 +69,13 @@ extension APIType: TargetType {
   }
   
   var token: String {
-    return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjY3NTIxNjYsIm9yaWdfaWF0IjoxNTY2NzQ4NTY2LCJwYXNzd29yZCI6Im50dXRoYWNrZXIwMTMxIiwic3R1ZGVudElEIjoiMTA0NDQwMDI2In0.1Up2Pvw48ZNnbYNqVpTHamSRZupNWzwx8JHFWrq2juQ"
+    guard let tokenData = UserDefaults.standard.object(forKey: "token") as? Data else {
+      return ""
+    }
+    guard let token = try? JSONDecoder().decode(Domain.Token.self, from: tokenData) else {
+      fatalError("cannot cast token")
+    }
+    return token.token
   }
   
   var headers: [String : String]? {

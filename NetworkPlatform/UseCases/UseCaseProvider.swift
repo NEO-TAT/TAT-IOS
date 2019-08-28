@@ -17,4 +17,8 @@ public final class UseCaseProvider: Domain.UseCaseProvider {
     return LoginUseCase()
   }
   
+  public func makeCurriculumsUseCase() -> Domain.CurriculumsUseCase {
+    return CurriculumsUseCase()
+  }
+  
 }

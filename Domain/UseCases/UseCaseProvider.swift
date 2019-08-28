@@ -10,4 +10,5 @@ import Foundation
 
 public protocol UseCaseProvider {
   func makeLoginUseCase() -> LoginUseCase
+  func makeCurriculumsUseCase() -> CurriculumsUseCase
 }
