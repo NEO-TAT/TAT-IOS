@@ -9,8 +9,13 @@ def rx_cocoa
   pod 'RxCocoa'
 end
 
+def swift_lint
+  pod 'SwiftLint'
+end
+
 target 'TAT' do
   use_frameworks!
+  swift_lint
   rx_swift
   rx_cocoa
 end
