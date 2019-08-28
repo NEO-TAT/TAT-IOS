@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3B308F712310160B00278C11"
-               BuildableName = "TAT.app"
-               BlueprintName = "TAT"
+               BlueprintIdentifier = "3BBC51BC23110754006AB174"
+               BuildableName = "NetworkPlatform.framework"
+               BlueprintName = "NetworkPlatform"
                ReferencedContainer = "container:TAT.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,9 +32,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3B3A40152313DC3C00D010AA"
-               BuildableName = "NetWorkPlatformTests.xctest"
-               BlueprintName = "NetWorkPlatformTests"
+               BlueprintIdentifier = "3B3A40412313E26600D010AA"
+               BuildableName = "NetworkPlatformTests.xctest"
+               BlueprintName = "NetworkPlatformTests"
                ReferencedContainer = "container:TAT.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -42,9 +42,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3B308F712310160B00278C11"
-            BuildableName = "TAT.app"
-            BlueprintName = "TAT"
+            BlueprintIdentifier = "3BBC51BC23110754006AB174"
+            BuildableName = "NetworkPlatform.framework"
+            BlueprintName = "NetworkPlatform"
             ReferencedContainer = "container:TAT.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -61,16 +61,15 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3B308F712310160B00278C11"
-            BuildableName = "TAT.app"
-            BlueprintName = "TAT"
+            BlueprintIdentifier = "3BBC51BC23110754006AB174"
+            BuildableName = "NetworkPlatform.framework"
+            BlueprintName = "NetworkPlatform"
             ReferencedContainer = "container:TAT.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -80,16 +79,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3B308F712310160B00278C11"
-            BuildableName = "TAT.app"
-            BlueprintName = "TAT"
+            BlueprintIdentifier = "3BBC51BC23110754006AB174"
+            BuildableName = "NetworkPlatform.framework"
+            BlueprintName = "NetworkPlatform"
             ReferencedContainer = "container:TAT.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
