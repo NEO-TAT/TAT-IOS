@@ -9,8 +9,8 @@
 import Foundation
 
 public struct Semester: Codable {
-  
+
   public let year: String
   public let semester: String
-  
+
 }

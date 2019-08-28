@@ -12,16 +12,16 @@ import RxSwift
 import Moya
 
 final class LoginUseCase: Domain.LoginUseCase {
-  
+
   private let provider: MoyaProvider<APIType>
-  
+
   init() { provider = MoyaProvider<APIType>() }
-  
+
   func login(studentId: String, password: String) -> Observable<Domain.Token> {
     return provider.rx.request(.login(studentId: studentId, password: password))
       .asObservable()
       .filterSuccessfulStatusCodes()
       .map(Domain.Token.self)
   }
-  
+
 }

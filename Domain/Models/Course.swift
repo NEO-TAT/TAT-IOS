@@ -9,11 +9,11 @@
 import Foundation
 
 public struct Course: Codable {
-  
+
   public let id: String
   public let name: String
   public let instructor: [String]
   public let periods: [String]
   public let classroom: [String]
-  
+
 }

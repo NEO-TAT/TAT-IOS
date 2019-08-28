@@ -18,11 +18,11 @@ enum APIType {
 }
 
 extension APIType: TargetType {
-  
+
   var baseURL: URL {
-    return  URL(string: "https://tat.ntut.club")!
+    return URL(string: "https://tat.ntut.club")!
   }
-  
+
   var path: String {
     switch self {
     case .login: return "/login"
@@ -30,18 +30,18 @@ extension APIType: TargetType {
     case .courses: return "auth/curriculums/courses"
     }
   }
-  
+
   var method: Moya.Method {
     switch self {
     case .login: return .post
     default: return .get
     }
   }
-  
+
   var sampleData: Data {
     return Data()
   }
-  
+
   var parameters: [String: Any]? {
     var params: [String: Any] = [:]
     switch self {
@@ -57,7 +57,7 @@ extension APIType: TargetType {
     }
     return params
   }
-  
+
   var task: Task {
     guard let parameters = parameters else { return .requestPlain }
     switch self {
@@ -66,7 +66,7 @@ extension APIType: TargetType {
     case .courses: return .requestParameters(parameters: parameters, encoding: URLEncoding.queryString)
     }
   }
-  
+
   var token: String {
     guard let tokenData = UserDefaults.standard.object(forKey: "token") as? Data else {
       return ""
@@ -76,8 +76,8 @@ extension APIType: TargetType {
     }
     return token.token
   }
-  
-  var headers: [String : String]? {
+
+  var headers: [String: String]? {
     var headers: [String: String] = [:]
     switch self {
     case .login: break
@@ -86,5 +86,5 @@ extension APIType: TargetType {
     }
     return headers
   }
-  
+
 }

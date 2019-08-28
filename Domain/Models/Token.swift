@@ -9,7 +9,7 @@
 import Foundation
 
 public struct Token: Codable {
-  
+
   public let code: Int
   public let expire: String
   public let token: String

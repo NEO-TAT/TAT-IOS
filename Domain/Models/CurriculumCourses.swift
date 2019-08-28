@@ -9,10 +9,10 @@
 import Foundation
 
 public struct CurriculumCourses: Codable {
-  
+
   public let courses: [Course]
   public let hasNoPeriodsCourses: Bool
   public let hasSaturdayCourses: Bool
   public let hasSundayCourses: Bool
-  
+
 }

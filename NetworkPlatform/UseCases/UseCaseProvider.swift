@@ -10,15 +10,15 @@ import Foundation
 import Domain
 
 public final class UseCaseProvider: Domain.UseCaseProvider {
-  
+
   public init() {}
-  
+
   public func makeLoginUseCase() -> Domain.LoginUseCase {
     return LoginUseCase()
   }
-  
+
   public func makeCurriculumsUseCase() -> Domain.CurriculumsUseCase {
     return CurriculumsUseCase()
   }
-  
+
 }
