@@ -18,6 +18,7 @@ target 'TAT' do
   swift_lint
   rx_swift
   rx_cocoa
+  pod 'SnapKit', '~> 5.0.0'
 end
 
 target 'Domain' do
