@@ -60,6 +60,7 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
     super.viewDidLoad()
     tabBarController?.title = "login"
     setUpLayouts()
+    setUpButtonsTap()
     bindViewModel()
   }
 
@@ -73,17 +74,23 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
 
     output.state
       .asObservable()
-      .subscribe(onNext: { (state) in
+      .subscribe(onNext: { [weak self] (state) in
+        switch state {
+        case .loading: self?.activityIndicator.startAnimating()
+        default: self?.activityIndicator.stopAnimating()
+        }
         print(state)
       }, onError: { (error) in
         print(error)
       })
       .disposed(by: rx.disposeBag)
+
   }
 
   private func setUpLayouts() {
     setUpTextFields()
     setUpButtons()
+    setUpActivityIndicator()
   }
 
   private func setUpTextFields() {
@@ -122,6 +129,13 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
       make.bottom.equalTo(clearButton)
       make.right.equalTo(passwordTextField)
       make.width.equalTo(clearButton)
+    }
+  }
+
+  private func setUpActivityIndicator() {
+    view.addSubview(activityIndicator)
+    activityIndicator.snp.makeConstraints { (make) in
+      make.center.equalToSuperview()
     }
   }
 
