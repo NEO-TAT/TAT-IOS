@@ -3,6 +3,7 @@ inhibit_all_warnings!
 
 def rx_swift
   pod 'RxSwift'
+  pod 'NSObject+Rx'
 end
 
 def rx_cocoa
