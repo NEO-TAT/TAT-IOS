@@ -29,6 +29,8 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
     passwordTextField.placeholder = "Plz enter your password"
     passwordTextField.borderStyle = .roundedRect
     passwordTextField.isSecureTextEntry = true
+    let password = UserDefaults.standard.string(forKey: "password")
+    passwordTextField.text = password
     return passwordTextField
   }()
 
@@ -69,7 +71,8 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
   private func bindViewModel() {
     let input = LoginViewModel.Input(studentId: studentIdTextField.rx.text.orEmpty.asObservable(),
                                      password: passwordTextField.rx.text.orEmpty.asObservable(),
-                                     store: storeButton.rx.tap.asObservable())
+                                     store: storeButton.rx.tap.asObservable(),
+                                     clear: clearButton.rx.tap.asObservable())
     let output = viewModel.transform(input: input)
 
     output.state

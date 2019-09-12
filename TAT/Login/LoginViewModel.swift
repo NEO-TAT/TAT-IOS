@@ -24,6 +24,7 @@ final class LoginViewModel: NSObject, ViewModelType {
     let studentId: Observable<String>
     let password: Observable<String>
     let store: Observable<Void>
+    let clear: Observable<Void>
   }
 
   struct Output {
@@ -47,9 +48,18 @@ extension LoginViewModel {
     let inputData = Observable.combineLatest(input.studentId, input.password)
     let state = PublishSubject<State>()
 
+    input.clear
+      .subscribe(onNext: { (_) in
+        UserDefaults.standard.removeObject(forKey: "studentId")
+        UserDefaults.standard.removeObject(forKey: "password")
+      })
+      .disposed(by: rx.disposeBag)
+
     let token = input.store
       .withLatestFrom(inputData)
       .flatMapLatest { [unowned self] (studentId, password) -> Observable<Token> in
+        UserDefaults.standard.set(studentId, forKey: "studentId")
+        UserDefaults.standard.set(password, forKey: "password")
         state.onNext(.loading)
         return self.loginUseCase.login(studentId: studentId, password: password)
       }
