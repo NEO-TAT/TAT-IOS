@@ -8,11 +8,27 @@
 
 import UIKit
 
-class MainTabBarController: UITabBarController {
+final class MainTabBarController: UITabBarController {
+
+  // MARK: - Life Cycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .blue
+    view.backgroundColor = .white
+    setUpViewControllers()
+  }
+
+  // MARK: - Private Methods
+
+  private func setUpViewControllers() {
+    let loginVC = LoginViewController()
+    let curriculum = CurriculumViewController()
+
+    loginVC.tabBarItem.title = "login"
+    curriculum.tabBarItem.title = "curriculum"
+
+    viewControllers = [loginVC, curriculum]
+    selectedViewController = loginVC
   }
 
 }

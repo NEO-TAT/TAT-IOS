@@ -9,13 +9,14 @@
 import Foundation
 import Domain
 import Network
+import NSObject_Rx
 
 final class Application {
 
   static let shared = Application()
 
   func configurateMainInterface(in window: UIWindow?) {
-    window?.rootViewController = ViewController()
+    window?.rootViewController = MainTabBarController()
     window?.makeKeyAndVisible()
   }
 
