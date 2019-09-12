@@ -3,6 +3,7 @@ inhibit_all_warnings!
 
 def rx_swift
   pod 'RxSwift'
+  pod 'NSObject+Rx'
 end
 
 def rx_cocoa
@@ -18,6 +19,7 @@ target 'TAT' do
   swift_lint
   rx_swift
   rx_cocoa
+  pod 'SnapKit', '~> 5.0.0'
 end
 
 target 'Domain' do
