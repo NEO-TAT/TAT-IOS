@@ -14,12 +14,17 @@ def swift_lint
   pod 'SwiftLint'
 end
 
+def ui
+  pod 'Dropdowns'
+  pod 'SnapKit', '~> 5.0.0'
+end
+
 target 'TAT' do
   use_frameworks!
   swift_lint
   rx_swift
   rx_cocoa
-  pod 'SnapKit', '~> 5.0.0'
+  ui
 end
 
 target 'Domain' do

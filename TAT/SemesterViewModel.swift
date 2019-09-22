@@ -14,8 +14,20 @@ import RxCocoa
 
 final class SemesterViewModel: NSObject, ViewModelType {
 
-  struct Input {}
-  struct Output {}
+  struct Input {
+    let targetStudentId: Observable<String>
+  }
+
+  struct Output {
+    let semesters: Observable<[Semester]>
+  }
+
+  private let curriculumsUseCase: Domain.CurriculumsUseCase
+
+  override init() {
+    let useCaseProvider = UseCaseProvider()
+    curriculumsUseCase = useCaseProvider.makeCurriculumsUseCase()
+  }
 
 }
 
@@ -24,7 +36,12 @@ final class SemesterViewModel: NSObject, ViewModelType {
 extension SemesterViewModel {
 
   func transform(input: SemesterViewModel.Input) -> SemesterViewModel.Output {
-    return Output()
+
+    let semesters = input.targetStudentId.flatMap { [unowned self] (targetStudentId) -> Observable<[Semester]> in
+      return self.curriculumsUseCase.semesters(targetStudentId: targetStudentId)
+    }
+
+    return Output(semesters: semesters)
   }
 
 }
