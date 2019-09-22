@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		023AD760860BFCD92FC23C3A /* Pods_Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF6DFB8D070D2B4DEAFD0B6 /* Pods_Domain.framework */; };
+		3B14479F232A6F5F004A1DA8 /* CurriculumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B14479E232A6F5F004A1DA8 /* CurriculumViewModel.swift */; };
+		3B1447A1232B858A004A1DA8 /* SemesterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1447A0232B858A004A1DA8 /* SemesterViewModel.swift */; };
 		3B296C2E23164B6E00B8E98A /* Semester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B296C2D23164B6E00B8E98A /* Semester.swift */; };
 		3B296C32231681F500B8E98A /* Course.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B296C31231681F500B8E98A /* Course.swift */; };
 		3B308F762310160B00278C11 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B308F752310160B00278C11 /* AppDelegate.swift */; };
@@ -77,6 +79,8 @@
 		2A7C1655E67FF667260123FA /* Pods-Domain.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Domain.release.xcconfig"; path = "Target Support Files/Pods-Domain/Pods-Domain.release.xcconfig"; sourceTree = "<group>"; };
 		386E9D47D1D25B624C5197C1 /* Pods_NetworkPlatform_Tests_NetworkPlatformTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NetworkPlatform_Tests_NetworkPlatformTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		39FF7CD1ABE392A1BF3E8F0F /* Pods-NetworkPlatformTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NetworkPlatformTests.debug.xcconfig"; path = "Target Support Files/Pods-NetworkPlatformTests/Pods-NetworkPlatformTests.debug.xcconfig"; sourceTree = "<group>"; };
+		3B14479E232A6F5F004A1DA8 /* CurriculumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurriculumViewModel.swift; sourceTree = "<group>"; };
+		3B1447A0232B858A004A1DA8 /* SemesterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemesterViewModel.swift; sourceTree = "<group>"; };
 		3B296C2D23164B6E00B8E98A /* Semester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Semester.swift; sourceTree = "<group>"; };
 		3B296C31231681F500B8E98A /* Course.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Course.swift; sourceTree = "<group>"; };
 		3B308F722310160B00278C11 /* TAT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TAT.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -197,6 +201,8 @@
 			isa = PBXGroup;
 			children = (
 				3B4DD4B4231F61B40099BB58 /* CurriculumViewController.swift */,
+				3B14479E232A6F5F004A1DA8 /* CurriculumViewModel.swift */,
+				3B1447A0232B858A004A1DA8 /* SemesterViewModel.swift */,
 			);
 			name = Curriculum;
 			sourceTree = "<group>";
@@ -593,8 +599,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				3B4DD4B2231F60BA0099BB58 /* LoginViewController.swift in Sources */,
+				3B1447A1232B858A004A1DA8 /* SemesterViewModel.swift in Sources */,
 				3BBC519623110477006AB174 /* Application.swift in Sources */,
 				3B4DD4B7231F64C80099BB58 /* LoginViewModel.swift in Sources */,
+				3B14479F232A6F5F004A1DA8 /* CurriculumViewModel.swift in Sources */,
 				3B308F782310160B00278C11 /* MainTabBarController.swift in Sources */,
 				3B308F762310160B00278C11 /* AppDelegate.swift in Sources */,
 				3B4DD4B5231F61B40099BB58 /* CurriculumViewController.swift in Sources */,
@@ -712,6 +720,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -766,6 +775,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
