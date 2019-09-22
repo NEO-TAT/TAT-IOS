@@ -15,16 +15,16 @@ final class CurriculumViewController: UIViewController {
 
   private let viewModel: CurriculumViewModel = CurriculumViewModel()
 
-  private lazy var searchButton: UIButton = {
-    let searchButton = UIButton(frame: .zero)
-    searchButton.setTitle("search", for: .normal)
-    return searchButton
-  }()
-
   private lazy var activityIndicator: UIActivityIndicatorView = {
     let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
     activityIndicator.color = .blue
     return activityIndicator
+  }()
+
+  private lazy var leftBarItem: UIBarButtonItem = {
+    return UIBarButtonItem(barButtonSystemItem: .search,
+                           target: self,
+                           action: nil)
   }()
 
   // MARK: - Life Cycle
@@ -34,17 +34,24 @@ final class CurriculumViewController: UIViewController {
     view.backgroundColor = .yellow
     tabBarController?.title = "curriculum"
 
+    setUpNavigationBarItems()
     setUpLayouts()
     bindViewModel()
   }
 
   // MARK: - Private Methonds
 
+  private func setUpNavigationBarItems() {
+    title = "curriculum"
+
+    navigationItem.leftBarButtonItem = leftBarItem
+  }
+
   private func bindViewModel() {
     let input = CurriculumViewModel.Input(year: Observable.just("108"),
                                           semester: Observable.just("1"),
                                           targetStudentId: Observable.just("104440026"),
-                                          searchTrigger: searchButton.rx.tap.asObservable())
+                                          searchTrigger: leftBarItem.rx.tap.asObservable())
     let output = viewModel.transform(input: input)
 
     output.state
@@ -63,17 +70,7 @@ final class CurriculumViewController: UIViewController {
   }
 
   private func setUpLayouts() {
-    setUpButtonsLayout()
     setUpActivityIndicator()
-  }
-
-  private func setUpButtonsLayout() {
-    view.addSubview(searchButton)
-
-    searchButton.snp.makeConstraints { (make) in
-      make.center.equalToSuperview()
-      make.size.equalTo(CGSize(width: 50, height: 50))
-    }
   }
 
   private func setUpActivityIndicator() {

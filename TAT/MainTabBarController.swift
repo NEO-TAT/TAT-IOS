@@ -21,8 +21,8 @@ final class MainTabBarController: UITabBarController {
   // MARK: - Private Methods
 
   private func setUpViewControllers() {
-    let loginVC = LoginViewController()
-    let curriculum = CurriculumViewController()
+    let loginVC = UINavigationController(rootViewController: LoginViewController())
+    let curriculum = UINavigationController(rootViewController: CurriculumViewController())
 
     loginVC.tabBarItem.title = "login"
     curriculum.tabBarItem.title = "curriculum"
