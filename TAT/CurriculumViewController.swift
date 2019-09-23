@@ -14,8 +14,7 @@ import Dropdowns
 
 final class CurriculumViewController: UIViewController {
 
-  private let semestersViewModel: SemesterViewModel = SemesterViewModel()
-  private let courseViewModel: CourseViewModel = CourseViewModel()
+  private let viewModel: CurriculumViewModel = CurriculumViewModel()
 
   private lazy var activityIndicator: UIActivityIndicatorView = {
     let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
@@ -57,13 +56,20 @@ final class CurriculumViewController: UIViewController {
   }
 
   private func bindViewModel() {
-    bindSemesterViewModel()
-    bindCurriculumViewModel()
-  }
+    let input = CurriculumViewModel.Input(targetStudentId: Observable.just("104440026"),
+                                          searchTrigger: leftBarItem.rx.tap.asObservable())
+    let output = viewModel.transform(input: input)
 
-  private func bindSemesterViewModel() {
-    let input = SemesterViewModel.Input(targetStudentId: Observable.just("104440026"))
-    let output = semestersViewModel.transform(input: input)
+    output.state
+      .subscribe(onNext: { [weak self] (state) in
+        switch state {
+        case .loading: self?.activityIndicator.startAnimating()
+        default: self?.activityIndicator.stopAnimating()
+        }
+      }, onError: { (error) in
+        print(error)
+      })
+      .disposed(by: rx.disposeBag)
 
     output.semesters
       .asObservable()
@@ -73,27 +79,6 @@ final class CurriculumViewController: UIViewController {
         self?.updateTitleView(by: semsterString)
       })
       .disposed(by: rx.disposeBag)
-  }
-
-  private func bindCurriculumViewModel() {
-    let input = CourseViewModel.Input(year: Observable.just("108"),
-                                             semester: Observable.just("1"),
-                                             targetStudentId: Observable.just("104440026"),
-                                             searchTrigger: leftBarItem.rx.tap.asObservable())
-       let output = courseViewModel.transform(input: input)
-
-       output.state
-         .asObservable()
-         .subscribe(onNext: { [weak self] (state) in
-           switch state {
-           case .loading: self?.activityIndicator.startAnimating()
-           default: self?.activityIndicator.stopAnimating()
-           }
-           print(state)
-         }, onError: { (error) in
-           print(error)
-         })
-         .disposed(by: rx.disposeBag)
   }
 
   private func setUpLayouts() {
