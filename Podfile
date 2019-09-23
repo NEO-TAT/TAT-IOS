@@ -17,6 +17,7 @@ end
 def ui
   pod 'Dropdowns'
   pod 'SnapKit', '~> 5.0.0'
+  pod 'IBPCollectionViewCompositionalLayout'
 end
 
 target 'TAT' do
