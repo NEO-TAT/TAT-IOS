@@ -22,6 +22,7 @@ final class CurriculumViewModel: NSObject, ViewModelType {
   struct Output {
     let state: Observable<CourseViewModel.State>
     let semesters: Observable<[Semester]>
+    let courses: Observable<[[Course]]>
   }
 
   private let semesterViewModel: SemesterViewModel
@@ -47,11 +48,12 @@ extension CurriculumViewModel {
                                             semester: Observable.just("1"),
                                             targetStudentId: input.targetStudentId,
                                             searchTrigger: input.searchTrigger)
-
-    let state = courseViewModel.transform(input: courseInput).state
-
+    let courseOutput = courseViewModel.transform(input: courseInput)
+    let state = courseOutput.state
+    let courses = courseOutput.courses
     return Output(state: state,
-                  semesters: semesters)
+                  semesters: semesters,
+                  courses: courses)
   }
 
 }

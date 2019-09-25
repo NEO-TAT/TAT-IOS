@@ -11,6 +11,8 @@ import RxSwift
 import RxCocoa
 import SnapKit
 import Dropdowns
+import IBPCollectionViewCompositionalLayout
+import Domain
 
 final class CurriculumViewController: UIViewController {
 
@@ -26,6 +28,37 @@ final class CurriculumViewController: UIViewController {
     return UIBarButtonItem(barButtonSystemItem: .search,
                            target: self,
                            action: nil)
+  }()
+
+  private lazy var collectionView: UICollectionView = {
+    let collectionView = UICollectionView(frame: .zero,
+                                          collectionViewLayout: collectionViewLayout)
+    collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    collectionView.backgroundColor = .black
+    collectionView.dataSource = self
+    collectionView.delegate = self
+
+    collectionView.register(DayCell.self,
+                            forCellWithReuseIdentifier: String(describing: DayCell.self))
+    collectionView.register(CourseCell.self,
+                            forCellWithReuseIdentifier: String(describing: CourseCell.self))
+    return collectionView
+  }()
+
+  private lazy var sections: [Section] = {
+    var sections: [Section] = [WeekSection(items: [])]
+    for i in 0..<13 {
+      sections.append(CurriculumSection(items: []))
+    }
+    return sections
+  }()
+
+  private lazy var collectionViewLayout: UICollectionViewLayout = {
+    let sections = self.sections
+    let layout = UICollectionViewCompositionalLayout { (sectionIndex, _) -> NSCollectionLayoutSection? in
+        return sections[sectionIndex].layoutSection()
+    }
+    return layout
   }()
 
   // MARK: - Life Cycle
@@ -72,17 +105,32 @@ final class CurriculumViewController: UIViewController {
       .disposed(by: rx.disposeBag)
 
     output.semesters
-      .asObservable()
       .subscribe(onNext: { [weak self] (semesters) in
         print(semesters)
         let semsterString = semesters.map { "\($0.year) 學年 第\($0.semester)學期" }
         self?.updateTitleView(by: semsterString)
       })
       .disposed(by: rx.disposeBag)
+
+    output.courses
+      .subscribe(onNext: { [weak self] (courses) in
+        guard let self = self else { return }
+        for (index, courses) in courses.enumerated() {
+          self.sections[index + 1].items = courses
+        }
+
+        DispatchQueue.main.async {
+          self.collectionView.reloadData()
+        }
+      }, onError: { (error) in
+        print(error)
+      })
+      .disposed(by: rx.disposeBag)
   }
 
   private func setUpLayouts() {
     setUpActivityIndicator()
+    setUpCollectionView()
   }
 
   private func setUpActivityIndicator() {
@@ -92,4 +140,31 @@ final class CurriculumViewController: UIViewController {
      }
    }
 
+  private func setUpCollectionView() {
+    view.addSubview(collectionView)
+
+    collectionView.snp.makeConstraints { (make) in
+      make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+      make.leading.trailing.bottom.equalToSuperview()
+    }
+  }
+
 }
+
+extension CurriculumViewController: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+      return sections.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+      return sections[section].numberOfItems
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+      return sections[indexPath.section].configureCell(collectionView: collectionView,
+                                                       indexPath: indexPath)
+    }
+}
+
+extension CurriculumViewController: UICollectionViewDelegate {}

@@ -29,6 +29,7 @@ final class CourseViewModel: NSObject, ViewModelType {
 
   struct Output {
     let state: Observable<State>
+    let courses: Observable<[[Domain.Course]]>
   }
 
   private let curriculumsUseCase: Domain.CurriculumsUseCase
@@ -59,18 +60,45 @@ extension CourseViewModel {
                                                semester: semester)
     }
 
-    courses
+    let coursesObseravle = courses
       .asObservable()
-      .subscribe(onNext: { (courses) in
-        print("courses \(courses)")
-        state.onNext(.success)
-      }, onError: { (error) in
-        print(error)
-        state.onNext(.error(message: error.localizedDescription))
-      })
-      .disposed(by: rx.disposeBag)
+      .flatMap({ [unowned self] (curriculumCourses) -> Observable<[[Domain.Course]]> in
+        var array: [[Domain.Course]] = self.initCourses()
 
-    return Output(state: state)
+        for course in curriculumCourses.courses {
+          for (day, period) in course.periods.enumerated() {
+            self.reshapCourses(period: period, day: day, course: course, array: &array)
+          }
+        }
+
+        state.onNext(.success)
+        return Observable.just(array)
+      })
+
+    return Output(state: state, courses: coursesObseravle)
+  }
+
+  private func reshapCourses(period: String, day: Int, course: Course, array: inout[[Domain.Course]]) {
+    if period.count > 0 {
+      let periods = period.split(separator: " ")
+      periods.forEach { (period) in
+        let section = Int(String(period), radix: 16) ?? 0
+        array[section - 1][day] = course
+      }
+    }
+  }
+
+  private func initCourses() -> [[Domain.Course]] {
+    let array = [[Domain.Course]].init(
+      repeating: [Course].init(
+        repeating: Course(id: "",
+                          name: "",
+                          instructor: [],
+                          periods: [],
+                          classroom: []),
+        count: 7),
+      count: 13)
+    return array
   }
 
 }
