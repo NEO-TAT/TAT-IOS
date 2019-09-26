@@ -16,4 +16,16 @@ public struct Course: Codable {
   public let periods: [String]
   public let classroom: [String]
 
+  public init(id: String,
+             name: String,
+             instructor: [String],
+             periods: [String],
+             classroom: [String]) {
+    self.id = id
+    self.name = name
+    self.instructor = instructor
+    self.periods = periods
+    self.classroom = classroom
+  }
+
 }
