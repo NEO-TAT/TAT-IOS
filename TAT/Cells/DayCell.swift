@@ -20,6 +20,7 @@ final class DayCell: UICollectionViewCell {
 
   override init(frame: CGRect) {
     super.init(frame: frame)
+    backgroundColor = .white
     setUpLayout()
   }
 
@@ -28,7 +29,6 @@ final class DayCell: UICollectionViewCell {
   }
 
   func configureCell(with day: String) {
-    backgroundColor = .white
     dayLabel.text = day
   }
 

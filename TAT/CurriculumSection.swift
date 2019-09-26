@@ -11,17 +11,16 @@ import Domain
 
 struct CurriculumSection: Section {
 
-  var numberOfItems = 7
   var items: [Any]
 
   func layoutSection() -> NSCollectionLayoutSection {
-    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(CGFloat(1) / CGFloat(7)),
+    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(CGFloat(1) / CGFloat(items.count)),
                                           heightDimension: .fractionalHeight(1))
     let item = NSCollectionLayoutItem(layoutSize: itemSize)
-    item.contentInsets = NSDirectionalEdgeInsets(top: 5,
-                                                 leading: 5,
-                                                 bottom: 5,
-                                                 trailing: 5)
+    item.contentInsets = NSDirectionalEdgeInsets(top: 1,
+                                                 leading: 1,
+                                                 bottom: 1,
+                                                 trailing: 1)
 
     let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
                                            heightDimension: .absolute(80))

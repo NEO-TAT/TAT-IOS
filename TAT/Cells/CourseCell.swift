@@ -15,11 +15,13 @@ final class CourseCell: UICollectionViewCell {
     let courseNameLabel = UILabel(frame: .zero)
     courseNameLabel.text = ""
     courseNameLabel.textAlignment = .center
+    courseNameLabel.numberOfLines = 0
     return courseNameLabel
   }()
 
   override init(frame: CGRect) {
     super.init(frame: frame)
+    backgroundColor = .yellow
     setUpLayout()
   }
 
@@ -28,7 +30,6 @@ final class CourseCell: UICollectionViewCell {
   }
 
   func configureCell(with courseName: String) {
-    backgroundColor = .yellow
     courseNameLabel.text = courseName
   }
 

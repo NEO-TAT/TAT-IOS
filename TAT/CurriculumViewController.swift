@@ -31,6 +31,7 @@ final class CurriculumViewController: UIViewController {
   }()
 
   private lazy var collectionView: UICollectionView = {
+    let collectionViewLayout = generateLayout()
     let collectionView = UICollectionView(frame: .zero,
                                           collectionViewLayout: collectionViewLayout)
     collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -46,19 +47,11 @@ final class CurriculumViewController: UIViewController {
   }()
 
   private lazy var sections: [Section] = {
-    var sections: [Section] = [WeekSection(items: [])]
+    var sections: [Section] = [WeekSection()]
     for i in 0..<13 {
       sections.append(CurriculumSection(items: []))
     }
     return sections
-  }()
-
-  private lazy var collectionViewLayout: UICollectionViewLayout = {
-    let sections = self.sections
-    let layout = UICollectionViewCompositionalLayout { (sectionIndex, _) -> NSCollectionLayoutSection? in
-        return sections[sectionIndex].layoutSection()
-    }
-    return layout
   }()
 
   // MARK: - Life Cycle
@@ -118,10 +111,7 @@ final class CurriculumViewController: UIViewController {
         for (index, courses) in courses.enumerated() {
           self.sections[index + 1].items = courses
         }
-
-        DispatchQueue.main.async {
-          self.collectionView.reloadData()
-        }
+        self.updateCollectionView()
       }, onError: { (error) in
         print(error)
       })
@@ -140,6 +130,14 @@ final class CurriculumViewController: UIViewController {
      }
    }
 
+  private func updateCollectionView() {
+    let layout = generateLayout()
+    self.collectionView.collectionViewLayout = layout
+    DispatchQueue.main.async { [weak self] in
+      self?.collectionView.reloadData()
+    }
+  }
+
   private func setUpCollectionView() {
     view.addSubview(collectionView)
 
@@ -147,6 +145,14 @@ final class CurriculumViewController: UIViewController {
       make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
       make.leading.trailing.bottom.equalToSuperview()
     }
+  }
+
+  private func generateLayout() -> UICollectionViewLayout {
+    let sections = self.sections
+    let layout = UICollectionViewCompositionalLayout { (sectionIndex, _) -> NSCollectionLayoutSection? in
+      return sections[sectionIndex].layoutSection()
+    }
+    return layout
   }
 
 }
@@ -157,7 +163,7 @@ extension CurriculumViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-      return sections[section].numberOfItems
+      return sections[section].items.count
     }
 
     func collectionView(_ collectionView: UICollectionView,

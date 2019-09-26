@@ -27,7 +27,7 @@ extension Week {
     case .wednesday: return "Wed."
     case .thursday: return "Thur."
     case .friday: return "Fri."
-    case .saturday: return "Sat"
+    case .saturday: return "Sat."
     case .sunday: return ""
     }
   }
