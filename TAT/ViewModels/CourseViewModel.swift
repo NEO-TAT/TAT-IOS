@@ -49,56 +49,45 @@ extension CourseViewModel {
     let inputData = Observable.combineLatest(input.year,
                                              input.semester,
                                              input.targetStudentId)
-    let state = PublishSubject<State>()
+    let state = ReplaySubject<State>.create(bufferSize: 1)
+
+    state.subscribe(onNext: { (state) in
+      print(state)
+    }).disposed(by: rx.disposeBag)
 
     let courses = input.searchTrigger
       .withLatestFrom(inputData)
-      .flatMap { [unowned self] (year, semester, targetStudentId) -> Observable<CurriculumCourses> in
+      .filter { $0 != "" && $1 != "" && $2 != "" }
+      .flatMap { [unowned self] (year, semester, targetStudentId) -> Observable<[[Domain.Course]]> in
         state.onNext(.loading)
-        return self.curriculumsUseCase.courses(targetStudentId: targetStudentId,
-                                               year: year,
-                                               semester: semester)
-    }
-
-    let coursesObseravle = courses
-      .asObservable()
-      .flatMap({ [unowned self] (curriculumCourses) -> Observable<[[Domain.Course]]> in
-        var array: [[Domain.Course]] = self.initCourses()
-
-        for course in curriculumCourses.courses {
-          for (day, period) in course.periods.enumerated() {
-            self.reshapCourses(period: period, day: day, course: course, array: &array)
-          }
-        }
-
-        state.onNext(.success)
-        return Observable.just(array)
-      })
-
-    return Output(state: state, courses: coursesObseravle)
-  }
-
-  private func reshapCourses(period: String, day: Int, course: Course, array: inout[[Domain.Course]]) {
-    if period.count > 0 {
-      let periods = period.split(separator: " ")
-      periods.forEach { (period) in
-        let section = Int(String(period), radix: 16) ?? 0
-        array[section - 1][day] = course
+        return self.generateCourses(year: year, semester: semester, targetStudentId: targetStudentId)
       }
-    }
+      .share(replay: 1)
+
+    courses
+      .subscribe(onNext: { (courses) in
+        state.onNext(.success)
+        if UserDefaults.standard.object(forKey: "courses") == nil {
+          guard let courses = try? JSONEncoder().encode(courses) else { return }
+          UserDefaults.standard.set(courses, forKey: "courses")
+        }
+      }, onError: { (error) in
+        print(error)
+        state.onNext(.error(message: "cannot get courses"))
+      })
+      .disposed(by: rx.disposeBag)
+
+    return Output(state: state, courses: courses)
   }
 
-  private func initCourses() -> [[Domain.Course]] {
-    let array = [[Domain.Course]].init(
-      repeating: [Course].init(
-        repeating: Course(id: "",
-                          name: "",
-                          instructor: [],
-                          periods: [],
-                          classroom: []),
-        count: 7),
-      count: 13)
-    return array
+  private func generateCourses(year: String, semester: String, targetStudentId: String) -> Observable<[[Domain.Course]]> {
+    guard let cachedData = UserDefaults.standard.object(forKey: "courses") as? Data,
+      let cachedCourses = try? JSONDecoder().decode([[Domain.Course]].self, from: cachedData) else {
+      return self.curriculumsUseCase.courses(targetStudentId: targetStudentId,
+                                             year: year,
+                                             semester: semester)
+    }
+    return Observable.just(cachedCourses)
   }
 
 }
