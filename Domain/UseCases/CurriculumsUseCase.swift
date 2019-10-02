@@ -11,5 +11,5 @@ import RxSwift
 
 public protocol CurriculumsUseCase {
   func semesters(targetStudentId: String) -> Observable<[Semester]>
-  func courses(targetStudentId: String, year: String, semester: String) -> Observable<CurriculumCourses>
+  func courses(targetStudentId: String, year: String, semester: String) -> Observable<[[Course]]>
 }

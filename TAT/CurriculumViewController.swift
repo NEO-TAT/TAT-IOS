@@ -20,7 +20,7 @@ final class CurriculumViewController: UIViewController {
 
   private lazy var activityIndicator: UIActivityIndicatorView = {
     let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
-    activityIndicator.color = .blue
+    activityIndicator.color = .systemPink
     return activityIndicator
   }()
 
@@ -82,8 +82,10 @@ final class CurriculumViewController: UIViewController {
   }
 
   private func bindViewModel() {
+    let viewDidLoadTrigger = Observable.just(())
+    let searchTrigger = Observable.merge(viewDidLoadTrigger, leftBarItem.rx.tap.asObservable())
     let input = CurriculumViewModel.Input(targetStudentId: Observable.just("104440026"),
-                                          searchTrigger: leftBarItem.rx.tap.asObservable())
+                                          searchTrigger: searchTrigger)
     let output = viewModel.transform(input: input)
 
     output.state
@@ -99,9 +101,10 @@ final class CurriculumViewController: UIViewController {
 
     output.semesters
       .subscribe(onNext: { [weak self] (semesters) in
-        print(semesters)
         let semsterString = semesters.map { "\($0.year) 學年 第\($0.semester)學期" }
         self?.updateTitleView(by: semsterString)
+      }, onError: { (error) in
+          print(error)
       })
       .disposed(by: rx.disposeBag)
 
@@ -119,12 +122,12 @@ final class CurriculumViewController: UIViewController {
   }
 
   private func setUpLayouts() {
-    setUpActivityIndicator()
     setUpCollectionView()
+    setUpActivityIndicator()
   }
 
   private func setUpActivityIndicator() {
-     view.addSubview(activityIndicator)
+     collectionView.addSubview(activityIndicator)
      activityIndicator.snp.makeConstraints { (make) in
        make.center.equalToSuperview()
      }

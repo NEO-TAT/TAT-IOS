@@ -42,18 +42,16 @@ extension CurriculumViewModel {
   func transform(input: Input) -> Output {
     let semesterInput = SemesterViewModel.Input(targetStudentId: input.targetStudentId)
 
-    let semesters = semesterViewModel.transform(input: semesterInput).semesters
+    let semesterOutput = semesterViewModel.transform(input: semesterInput)
 
     let courseInput = CourseViewModel.Input(year: Observable.just("108"),
                                             semester: Observable.just("1"),
                                             targetStudentId: input.targetStudentId,
                                             searchTrigger: input.searchTrigger)
     let courseOutput = courseViewModel.transform(input: courseInput)
-    let state = courseOutput.state
-    let courses = courseOutput.courses
-    return Output(state: state,
-                  semesters: semesters,
-                  courses: courses)
+    return Output(state: courseOutput.state,
+                  semesters: semesterOutput.semesters,
+                  courses: courseOutput.courses)
   }
 
 }

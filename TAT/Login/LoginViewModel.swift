@@ -52,6 +52,10 @@ extension LoginViewModel {
       .subscribe(onNext: { (_) in
         UserDefaults.standard.removeObject(forKey: "studentId")
         UserDefaults.standard.removeObject(forKey: "password")
+        UserDefaults.standard.removeObject(forKey: "semesters")
+        UserDefaults.standard.removeObject(forKey: "courses")
+        UserDefaults.standard.removeObject(forKey: "targetStudentId")
+        UserDefaults.standard.removeObject(forKey: "token")
       })
       .disposed(by: rx.disposeBag)
 
