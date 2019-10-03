@@ -10,6 +10,6 @@ import Foundation
 import RxSwift
 
 public protocol CurriculumsUseCase {
-  func semesters(targetStudentId: String) -> Observable<[Semester]>
-  func courses(targetStudentId: String, year: String, semester: String) -> Observable<[[Course]]>
+  func semesters(targetStudentId: String) -> Single<[Semester]>
+  func courses(targetStudentId: String, year: String, semester: String) -> Single<[[Course]]>
 }

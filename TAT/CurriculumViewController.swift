@@ -16,6 +16,8 @@ import Domain
 
 final class CurriculumViewController: UIViewController {
 
+  // MARK: - Properties
+
   private let viewModel: CurriculumViewModel = CurriculumViewModel()
 
   private lazy var activityIndicator: UIActivityIndicatorView = {
@@ -66,7 +68,11 @@ final class CurriculumViewController: UIViewController {
     bindViewModel()
   }
 
-  // MARK: - Private Methonds
+}
+
+// MARK: - Private Methods
+
+extension CurriculumViewController {
 
   private func setUpNavigationBarItems() {
     title = "curriculum"
@@ -82,8 +88,7 @@ final class CurriculumViewController: UIViewController {
   }
 
   private func bindViewModel() {
-    let viewDidLoadTrigger = Observable.just(())
-    let searchTrigger = Observable.merge(viewDidLoadTrigger, leftBarItem.rx.tap.asObservable())
+    let searchTrigger = Observable.merge(rx.viewWillAppear, leftBarItem.rx.tap.asObservable())
     let input = CurriculumViewModel.Input(targetStudentId: Observable.just("104440026"),
                                           searchTrigger: searchTrigger)
     let output = viewModel.transform(input: input)
@@ -160,6 +165,8 @@ final class CurriculumViewController: UIViewController {
 
 }
 
+// MARk: - UICollectionViewDataSource
+
 extension CurriculumViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
       return sections.count
@@ -175,5 +182,7 @@ extension CurriculumViewController: UICollectionViewDataSource {
                                                        indexPath: indexPath)
     }
 }
+
+// MARK: - UICollectionViewDelegate
 
 extension CurriculumViewController: UICollectionViewDelegate {}

@@ -11,7 +11,11 @@ import Domain
 
 struct CurriculumSection: Section {
 
+  // MARK: - Propeties
+
   var items: [Any]
+
+  // MARK: Methods
 
   func layoutSection() -> NSCollectionLayoutSection {
     let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(CGFloat(1) / CGFloat(items.count)),

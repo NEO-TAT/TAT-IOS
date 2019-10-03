@@ -13,13 +13,18 @@ import Moya
 
 final class LoginUseCase: Domain.LoginUseCase {
 
-  private let provider: MoyaProvider<APIType>
+  // MARK: - Properties
 
-  init() { provider = MoyaProvider<APIType>() }
+  private let provider: NetworkProvvider<APIType>
 
-  func login(studentId: String, password: String) -> Observable<Domain.Token> {
-    return provider.rx.request(.login(studentId: studentId, password: password))
-      .asObservable()
+  // MARK: - Init
+
+  init() { provider = NetworkProvvider<APIType>() }
+
+  // MARK: - Methods
+
+  func login(studentId: String, password: String) -> Single<Domain.Token> {
+    return provider.request(.login(studentId: studentId, password: password))
       .filterSuccessfulStatusCodes()
       .map(Domain.Token.self)
   }

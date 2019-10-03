@@ -22,12 +22,13 @@ final class SemesterViewModel: NSObject, ViewModelType {
     let semesters: Observable<[Semester]>
   }
 
+  // MARK: - Properties
+
   private let curriculumsUseCase: Domain.CurriculumsUseCase
 
-  override init() {
-    let useCaseProvider = UseCaseProvider()
-    curriculumsUseCase = useCaseProvider.makeCurriculumsUseCase()
-  }
+  // MARK: - Init
+
+  override init() { curriculumsUseCase = UseCaseProvider().makeCurriculumsUseCase() }
 
 }
 
@@ -38,9 +39,7 @@ extension SemesterViewModel {
   func transform(input: SemesterViewModel.Input) -> SemesterViewModel.Output {
     let semesters = input.targetStudentId
       .filter { $0 != "" }
-      .flatMap { [unowned self] (targetStudentId) -> Observable<[Semester]> in
-        self.generateSemesters(from: targetStudentId)
-      }
+      .flatMap(generateSemesters)
       .share()
 
     semesters
@@ -57,15 +56,22 @@ extension SemesterViewModel {
     return Output(semesters: semesters)
   }
 
+}
+
+// MARK: - Private Methods
+
+extension SemesterViewModel {
+
   private func generateSemesters(from targetStudentId: String) -> Observable<[Semester]> {
     guard let cachedTargetStudentId = UserDefaults.standard.string(forKey: "targetStudentId"),
       cachedTargetStudentId == targetStudentId else {
         UserDefaults.standard.set(targetStudentId, forKey: "targetStudentId")
-        return curriculumsUseCase.semesters(targetStudentId: targetStudentId)
+        return curriculumsUseCase.semesters(targetStudentId: targetStudentId).asObservable()
     }
     guard let cachedData = UserDefaults.standard.object(forKey: "semesters") as? Data,
       let cachedSemesters = try? JSONDecoder().decode([Semester].self, from: cachedData)
       else { fatalError("cannot cast to semesters") }
-    return Observable.just(cachedSemesters)
+    return .just(cachedSemesters)
   }
+
 }

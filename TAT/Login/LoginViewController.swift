@@ -13,6 +13,8 @@ import SnapKit
 
 final class LoginViewController: UIViewController, UITextFieldDelegate {
 
+  // MARK: - Propeties
+
   private let viewModel: LoginViewModel = LoginViewModel()
 
   private lazy var studentIdTextField: UITextField = {
@@ -66,7 +68,11 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
     bindViewModel()
   }
 
-  // MARK: - Private Methonds
+}
+
+// MARK: - Private Methods
+
+extension LoginViewController {
 
   private func bindViewModel() {
     let input = LoginViewModel.Input(studentId: studentIdTextField.rx.text.orEmpty.asObservable(),
@@ -173,6 +179,8 @@ extension LoginViewController {
   }
 
 }
+
+// MARK: - First Responder
 
 extension LoginViewController {
 

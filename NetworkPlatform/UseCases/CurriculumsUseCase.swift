@@ -13,29 +13,36 @@ import Moya
 
 final class CurriculumsUseCase: Domain.CurriculumsUseCase {
 
-  private let provider: MoyaProvider<APIType>
+  // MARK: - Properties
 
-  init() { provider = MoyaProvider<APIType>() }
+  private let provider: NetworkProvvider<APIType>
 
-  func semesters(targetStudentId: String) -> Observable<[Domain.Semester]> {
-    return provider.rx.request(.semesters(targetStudentId: targetStudentId))
-      .asObservable()
+  // MARK: - Init
+
+  init() { provider = NetworkProvvider<APIType>() }
+
+  // MARK: Methods
+
+  func semesters(targetStudentId: String) -> Single<[Domain.Semester]> {
+    return provider.request(.semesters(targetStudentId: targetStudentId))
       .filterSuccessfulStatusCodes()
       .map([Domain.Semester].self)
   }
 
-  func courses(targetStudentId: String, year: String, semester: String) -> Observable<[[Domain.Course]]> {
-    return provider.rx.request(.courses(targetStudentId: targetStudentId,
+  func courses(targetStudentId: String, year: String, semester: String) -> Single<[[Domain.Course]]> {
+    return provider.request(.courses(targetStudentId: targetStudentId,
                                         year: year,
                                         semester: semester))
-      .asObservable()
       .filterSuccessfulStatusCodes()
       .map(Domain.CurriculumCourses.self)
-      .map { [weak self] (curriculumCourses) -> [[Domain.Course]] in
-        guard let self = self else { return [] }
-        return self.generateCourses(from: curriculumCourses)
-      }
+      .map(generateCourses)
   }
+
+}
+
+// MARK: - Private Methods
+
+extension CurriculumsUseCase {
 
   private func generateCourses(from curriculumCourses: Domain.CurriculumCourses) -> [[Domain.Course]] {
     var array: [[Domain.Course]] = self.initCourses()

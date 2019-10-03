@@ -11,14 +11,13 @@ import Domain
 
 public final class UseCaseProvider: Domain.UseCaseProvider {
 
+  // MARK: - Init
+
   public init() {}
 
-  public func makeLoginUseCase() -> Domain.LoginUseCase {
-    return LoginUseCase()
-  }
+  // MARK: - Public Methods
 
-  public func makeCurriculumsUseCase() -> Domain.CurriculumsUseCase {
-    return CurriculumsUseCase()
-  }
+  public func makeLoginUseCase() -> Domain.LoginUseCase { return LoginUseCase() }
+  public func makeCurriculumsUseCase() -> Domain.CurriculumsUseCase { return CurriculumsUseCase() }
 
 }

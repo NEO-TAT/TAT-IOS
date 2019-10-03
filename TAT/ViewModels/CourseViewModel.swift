@@ -32,7 +32,11 @@ final class CourseViewModel: NSObject, ViewModelType {
     let courses: Observable<[[Domain.Course]]>
   }
 
+  // MARK: - Properties
+
   private let curriculumsUseCase: Domain.CurriculumsUseCase
+
+  // MARK: - Init
 
   override init() {
     let useCaseProvider = UseCaseProvider()
@@ -50,10 +54,6 @@ extension CourseViewModel {
                                              input.semester,
                                              input.targetStudentId)
     let state = ReplaySubject<State>.create(bufferSize: 1)
-
-    state.subscribe(onNext: { (state) in
-      print(state)
-    }).disposed(by: rx.disposeBag)
 
     let courses = input.searchTrigger
       .withLatestFrom(inputData)
@@ -80,14 +80,20 @@ extension CourseViewModel {
     return Output(state: state, courses: courses)
   }
 
+}
+
+// MARK: - Private Methods
+
+extension CourseViewModel {
+
   private func generateCourses(year: String, semester: String, targetStudentId: String) -> Observable<[[Domain.Course]]> {
     guard let cachedData = UserDefaults.standard.object(forKey: "courses") as? Data,
       let cachedCourses = try? JSONDecoder().decode([[Domain.Course]].self, from: cachedData) else {
       return self.curriculumsUseCase.courses(targetStudentId: targetStudentId,
                                              year: year,
-                                             semester: semester)
+                                             semester: semester).asObservable()
     }
-    return Observable.just(cachedCourses)
+    return .just(cachedCourses)
   }
 
 }

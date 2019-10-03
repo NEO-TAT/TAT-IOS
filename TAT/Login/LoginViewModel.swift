@@ -31,7 +31,11 @@ final class LoginViewModel: NSObject, ViewModelType {
     let state: Observable<State>
   }
 
+  // MARK: - Properties
+
   private let loginUseCase: Domain.LoginUseCase
+
+  // MARK: - Init
 
   override init() {
     let useCaseProvider = UseCaseProvider()
@@ -61,7 +65,7 @@ extension LoginViewModel {
 
     let token = input.store
       .withLatestFrom(inputData)
-      .flatMapLatest { [unowned self] (studentId, password) -> Observable<Token> in
+      .flatMapLatest { [unowned self] (studentId, password) -> Single<Token> in
         UserDefaults.standard.set(studentId, forKey: "studentId")
         UserDefaults.standard.set(password, forKey: "password")
         state.onNext(.loading)
