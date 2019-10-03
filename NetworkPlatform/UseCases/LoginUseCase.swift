@@ -23,9 +23,8 @@ final class LoginUseCase: Domain.LoginUseCase {
 
   // MARK: - Methods
 
-  func login(studentId: String, password: String) -> Observable<Domain.Token> {
+  func login(studentId: String, password: String) -> Single<Domain.Token> {
     return provider.rx.request(.login(studentId: studentId, password: password))
-      .asObservable()
       .filterSuccessfulStatusCodes()
       .map(Domain.Token.self)
   }

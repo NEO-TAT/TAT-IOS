@@ -65,7 +65,7 @@ extension LoginViewModel {
 
     let token = input.store
       .withLatestFrom(inputData)
-      .flatMapLatest { [unowned self] (studentId, password) -> Observable<Token> in
+      .flatMapLatest { [unowned self] (studentId, password) -> Single<Token> in
         UserDefaults.standard.set(studentId, forKey: "studentId")
         UserDefaults.standard.set(password, forKey: "password")
         state.onNext(.loading)

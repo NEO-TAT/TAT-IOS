@@ -23,18 +23,16 @@ final class CurriculumsUseCase: Domain.CurriculumsUseCase {
 
   // MARK: Methods
 
-  func semesters(targetStudentId: String) -> Observable<[Domain.Semester]> {
+  func semesters(targetStudentId: String) -> Single<[Domain.Semester]> {
     return provider.rx.request(.semesters(targetStudentId: targetStudentId))
-      .asObservable()
       .filterSuccessfulStatusCodes()
       .map([Domain.Semester].self)
   }
 
-  func courses(targetStudentId: String, year: String, semester: String) -> Observable<[[Domain.Course]]> {
+  func courses(targetStudentId: String, year: String, semester: String) -> Single<[[Domain.Course]]> {
     return provider.rx.request(.courses(targetStudentId: targetStudentId,
                                         year: year,
                                         semester: semester))
-      .asObservable()
       .filterSuccessfulStatusCodes()
       .map(Domain.CurriculumCourses.self)
       .map(generateCourses)

@@ -66,7 +66,7 @@ extension SemesterViewModel {
     guard let cachedTargetStudentId = UserDefaults.standard.string(forKey: "targetStudentId"),
       cachedTargetStudentId == targetStudentId else {
         UserDefaults.standard.set(targetStudentId, forKey: "targetStudentId")
-        return curriculumsUseCase.semesters(targetStudentId: targetStudentId)
+        return curriculumsUseCase.semesters(targetStudentId: targetStudentId).asObservable()
     }
     guard let cachedData = UserDefaults.standard.object(forKey: "semesters") as? Data,
       let cachedSemesters = try? JSONDecoder().decode([Semester].self, from: cachedData)

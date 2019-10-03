@@ -91,7 +91,7 @@ extension CourseViewModel {
       let cachedCourses = try? JSONDecoder().decode([[Domain.Course]].self, from: cachedData) else {
       return self.curriculumsUseCase.courses(targetStudentId: targetStudentId,
                                              year: year,
-                                             semester: semester)
+                                             semester: semester).asObservable()
     }
     return .just(cachedCourses)
   }
