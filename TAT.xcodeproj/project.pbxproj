@@ -24,6 +24,9 @@
 		3B4329E1233905B100789E32 /* Week.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4329E0233905B100789E32 /* Week.swift */; };
 		3B4329E323392B5F00789E32 /* CurriculumSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4329E223392B5F00789E32 /* CurriculumSection.swift */; };
 		3B4329E523392CB500789E32 /* CourseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4329E423392CB500789E32 /* CourseCell.swift */; };
+		3B4329F1234657AE00789E32 /* NetworkProvvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4329F0234657AE00789E32 /* NetworkProvvider.swift */; };
+		3B4329F423465B8000789E32 /* LoginError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4329F323465B8000789E32 /* LoginError.swift */; };
+		3B4329F62346662100789E32 /* UIViewController+rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4329F52346662100789E32 /* UIViewController+rx.swift */; };
 		3B4DD4B2231F60BA0099BB58 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4DD4B1231F60BA0099BB58 /* LoginViewController.swift */; };
 		3B4DD4B5231F61B40099BB58 /* CurriculumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4DD4B4231F61B40099BB58 /* CurriculumViewController.swift */; };
 		3B4DD4B7231F64C80099BB58 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4DD4B6231F64C80099BB58 /* LoginViewModel.swift */; };
@@ -105,6 +108,9 @@
 		3B4329E0233905B100789E32 /* Week.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Week.swift; sourceTree = "<group>"; };
 		3B4329E223392B5F00789E32 /* CurriculumSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurriculumSection.swift; sourceTree = "<group>"; };
 		3B4329E423392CB500789E32 /* CourseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCell.swift; sourceTree = "<group>"; };
+		3B4329F0234657AE00789E32 /* NetworkProvvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkProvvider.swift; sourceTree = "<group>"; };
+		3B4329F323465B8000789E32 /* LoginError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginError.swift; sourceTree = "<group>"; };
+		3B4329F52346662100789E32 /* UIViewController+rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+rx.swift"; sourceTree = "<group>"; };
 		3B4DD4B1231F60BA0099BB58 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		3B4DD4B4231F61B40099BB58 /* CurriculumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurriculumViewController.swift; sourceTree = "<group>"; };
 		3B4DD4B6231F64C80099BB58 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
@@ -257,6 +263,14 @@
 			name = Sections;
 			sourceTree = "<group>";
 		};
+		3B4329F223465B7200789E32 /* Error */ = {
+			isa = PBXGroup;
+			children = (
+				3B4329F323465B8000789E32 /* LoginError.swift */,
+			);
+			path = Error;
+			sourceTree = "<group>";
+		};
 		3B4DD4B0231F60AC0099BB58 /* Login */ = {
 			isa = PBXGroup;
 			children = (
@@ -279,6 +293,7 @@
 		3B4DD4B8231F6A280099BB58 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				3B4329F52346662100789E32 /* UIViewController+rx.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -334,6 +349,7 @@
 		3BBC51BE23110754006AB174 /* NetworkPlatform */ = {
 			isa = PBXGroup;
 			children = (
+				3B4329F223465B7200789E32 /* Error */,
 				3BBC51EF23111184006AB174 /* Network */,
 				3BBC51DC23111045006AB174 /* UseCases */,
 				3BBC51BF23110754006AB174 /* NetworkPlatform.h */,
@@ -367,6 +383,7 @@
 			isa = PBXGroup;
 			children = (
 				3BA1894623112B8B00E1B4A4 /* APIType.swift */,
+				3B4329F0234657AE00789E32 /* NetworkProvvider.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -686,6 +703,7 @@
 				3B4329CF2337DEAC00789E32 /* CourseViewModel.swift in Sources */,
 				3B4DD4B5231F61B40099BB58 /* CurriculumViewController.swift in Sources */,
 				3B4329D62338AD6C00789E32 /* DayCell.swift in Sources */,
+				3B4329F62346662100789E32 /* UIViewController+rx.swift in Sources */,
 				3B4DD4BE232383D10099BB58 /* ViewModelType.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -694,7 +712,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B4329F1234657AE00789E32 /* NetworkProvvider.swift in Sources */,
 				3BA189492311309900E1B4A4 /* UseCaseProvider.swift in Sources */,
+				3B4329F423465B8000789E32 /* LoginError.swift in Sources */,
 				3BA1894723112B8B00E1B4A4 /* APIType.swift in Sources */,
 				3BA1894F2312EA9400E1B4A4 /* CurriculumsUseCase.swift in Sources */,
 				3BA18942231129E000E1B4A4 /* LoginUseCase.swift in Sources */,
@@ -793,7 +813,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -849,7 +869,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

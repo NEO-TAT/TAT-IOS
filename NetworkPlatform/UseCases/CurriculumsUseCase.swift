@@ -15,22 +15,22 @@ final class CurriculumsUseCase: Domain.CurriculumsUseCase {
 
   // MARK: - Properties
 
-  private let provider: MoyaProvider<APIType>
+  private let provider: NetworkProvvider<APIType>
 
   // MARK: - Init
 
-  init() { provider = MoyaProvider<APIType>() }
+  init() { provider = NetworkProvvider<APIType>() }
 
   // MARK: Methods
 
   func semesters(targetStudentId: String) -> Single<[Domain.Semester]> {
-    return provider.rx.request(.semesters(targetStudentId: targetStudentId))
+    return provider.request(.semesters(targetStudentId: targetStudentId))
       .filterSuccessfulStatusCodes()
       .map([Domain.Semester].self)
   }
 
   func courses(targetStudentId: String, year: String, semester: String) -> Single<[[Domain.Course]]> {
-    return provider.rx.request(.courses(targetStudentId: targetStudentId,
+    return provider.request(.courses(targetStudentId: targetStudentId,
                                         year: year,
                                         semester: semester))
       .filterSuccessfulStatusCodes()

@@ -15,16 +15,16 @@ final class LoginUseCase: Domain.LoginUseCase {
 
   // MARK: - Properties
 
-  private let provider: MoyaProvider<APIType>
+  private let provider: NetworkProvvider<APIType>
 
   // MARK: - Init
 
-  init() { provider = MoyaProvider<APIType>() }
+  init() { provider = NetworkProvvider<APIType>() }
 
   // MARK: - Methods
 
   func login(studentId: String, password: String) -> Single<Domain.Token> {
-    return provider.rx.request(.login(studentId: studentId, password: password))
+    return provider.request(.login(studentId: studentId, password: password))
       .filterSuccessfulStatusCodes()
       .map(Domain.Token.self)
   }

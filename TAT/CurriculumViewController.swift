@@ -88,8 +88,7 @@ extension CurriculumViewController {
   }
 
   private func bindViewModel() {
-    let viewDidLoadTrigger = Observable.just(())
-    let searchTrigger = Observable.merge(viewDidLoadTrigger, leftBarItem.rx.tap.asObservable())
+    let searchTrigger = Observable.merge(rx.viewWillAppear, leftBarItem.rx.tap.asObservable())
     let input = CurriculumViewModel.Input(targetStudentId: Observable.just("104440026"),
                                           searchTrigger: searchTrigger)
     let output = viewModel.transform(input: input)
