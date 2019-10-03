@@ -31,10 +31,7 @@ final class CurriculumsUseCase: Domain.CurriculumsUseCase {
       .asObservable()
       .filterSuccessfulStatusCodes()
       .map(Domain.CurriculumCourses.self)
-      .map { [weak self] (curriculumCourses) -> [[Domain.Course]] in
-        guard let self = self else { return [] }
-        return self.generateCourses(from: curriculumCourses)
-      }
+      .map(generateCourses)
   }
 
   private func generateCourses(from curriculumCourses: Domain.CurriculumCourses) -> [[Domain.Course]] {

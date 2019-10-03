@@ -51,10 +51,6 @@ extension CourseViewModel {
                                              input.targetStudentId)
     let state = ReplaySubject<State>.create(bufferSize: 1)
 
-    state.subscribe(onNext: { (state) in
-      print(state)
-    }).disposed(by: rx.disposeBag)
-
     let courses = input.searchTrigger
       .withLatestFrom(inputData)
       .filter { $0 != "" && $1 != "" && $2 != "" }
@@ -87,7 +83,7 @@ extension CourseViewModel {
                                              year: year,
                                              semester: semester)
     }
-    return Observable.just(cachedCourses)
+    return .just(cachedCourses)
   }
 
 }

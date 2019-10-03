@@ -38,9 +38,7 @@ extension SemesterViewModel {
   func transform(input: SemesterViewModel.Input) -> SemesterViewModel.Output {
     let semesters = input.targetStudentId
       .filter { $0 != "" }
-      .flatMap { [unowned self] (targetStudentId) -> Observable<[Semester]> in
-        self.generateSemesters(from: targetStudentId)
-      }
+      .flatMap(generateSemesters)
       .share()
 
     semesters
@@ -66,6 +64,6 @@ extension SemesterViewModel {
     guard let cachedData = UserDefaults.standard.object(forKey: "semesters") as? Data,
       let cachedSemesters = try? JSONDecoder().decode([Semester].self, from: cachedData)
       else { fatalError("cannot cast to semesters") }
-    return Observable.just(cachedSemesters)
+    return .just(cachedSemesters)
   }
 }
