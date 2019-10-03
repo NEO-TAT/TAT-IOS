@@ -22,12 +22,13 @@ final class SemesterViewModel: NSObject, ViewModelType {
     let semesters: Observable<[Semester]>
   }
 
+  // MARK: - Properties
+
   private let curriculumsUseCase: Domain.CurriculumsUseCase
 
-  override init() {
-    let useCaseProvider = UseCaseProvider()
-    curriculumsUseCase = useCaseProvider.makeCurriculumsUseCase()
-  }
+  // MARK: - Init
+
+  override init() { curriculumsUseCase = UseCaseProvider().makeCurriculumsUseCase() }
 
 }
 
@@ -55,6 +56,12 @@ extension SemesterViewModel {
     return Output(semesters: semesters)
   }
 
+}
+
+// MARK: - Private Methods
+
+extension SemesterViewModel {
+
   private func generateSemesters(from targetStudentId: String) -> Observable<[Semester]> {
     guard let cachedTargetStudentId = UserDefaults.standard.string(forKey: "targetStudentId"),
       cachedTargetStudentId == targetStudentId else {
@@ -66,4 +73,5 @@ extension SemesterViewModel {
       else { fatalError("cannot cast to semesters") }
     return .just(cachedSemesters)
   }
+
 }

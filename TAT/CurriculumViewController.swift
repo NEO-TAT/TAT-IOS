@@ -16,6 +16,8 @@ import Domain
 
 final class CurriculumViewController: UIViewController {
 
+  // MARK: - Properties
+
   private let viewModel: CurriculumViewModel = CurriculumViewModel()
 
   private lazy var activityIndicator: UIActivityIndicatorView = {
@@ -66,7 +68,11 @@ final class CurriculumViewController: UIViewController {
     bindViewModel()
   }
 
-  // MARK: - Private Methonds
+}
+
+// MARK: - Private Methods
+
+extension CurriculumViewController {
 
   private func setUpNavigationBarItems() {
     title = "curriculum"
@@ -160,6 +166,8 @@ final class CurriculumViewController: UIViewController {
 
 }
 
+// MARk: - UICollectionViewDataSource
+
 extension CurriculumViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
       return sections.count
@@ -175,5 +183,7 @@ extension CurriculumViewController: UICollectionViewDataSource {
                                                        indexPath: indexPath)
     }
 }
+
+// MARK: - UICollectionViewDelegate
 
 extension CurriculumViewController: UICollectionViewDelegate {}

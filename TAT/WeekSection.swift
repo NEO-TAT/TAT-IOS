@@ -9,11 +9,18 @@
 import IBPCollectionViewCompositionalLayout
 
 struct WeekSection: Section {
+
+  // MARK: - Properties
+
   var items: [Any]
+
+  // MARK: - Init
 
   init() {
     items = [Week.sunday, Week.monday, Week.tuesday, Week.wednesday, Week.thursday, Week.friday, Week.saturday]
   }
+
+  // MARK: - Methods
 
   func layoutSection() -> NSCollectionLayoutSection {
 
@@ -38,11 +45,9 @@ struct WeekSection: Section {
                                                         for: indexPath) as? DayCell,
     let day = items as? [Week] else { fatalError("cannot init DayCell") }
 
-//    if let day = Week(rawValue: indexPath.row)?.toString() {
-//      cell.configureCell(with: day)
-//    }
     cell.configureCell(with: day[indexPath.row].toString())
 
     return cell
   }
+
 }

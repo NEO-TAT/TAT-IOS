@@ -32,7 +32,11 @@ final class CourseViewModel: NSObject, ViewModelType {
     let courses: Observable<[[Domain.Course]]>
   }
 
+  // MARK: - Properties
+
   private let curriculumsUseCase: Domain.CurriculumsUseCase
+
+  // MARK: - Init
 
   override init() {
     let useCaseProvider = UseCaseProvider()
@@ -75,6 +79,12 @@ extension CourseViewModel {
 
     return Output(state: state, courses: courses)
   }
+
+}
+
+// MARK: - Private Methods
+
+extension CourseViewModel {
 
   private func generateCourses(year: String, semester: String, targetStudentId: String) -> Observable<[[Domain.Course]]> {
     guard let cachedData = UserDefaults.standard.object(forKey: "courses") as? Data,

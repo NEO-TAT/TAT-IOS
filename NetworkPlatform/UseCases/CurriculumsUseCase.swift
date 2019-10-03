@@ -13,9 +13,15 @@ import Moya
 
 final class CurriculumsUseCase: Domain.CurriculumsUseCase {
 
+  // MARK: - Properties
+
   private let provider: MoyaProvider<APIType>
 
+  // MARK: - Init
+
   init() { provider = MoyaProvider<APIType>() }
+
+  // MARK: Methods
 
   func semesters(targetStudentId: String) -> Observable<[Domain.Semester]> {
     return provider.rx.request(.semesters(targetStudentId: targetStudentId))
@@ -33,6 +39,12 @@ final class CurriculumsUseCase: Domain.CurriculumsUseCase {
       .map(Domain.CurriculumCourses.self)
       .map(generateCourses)
   }
+
+}
+
+// MARK: - Private Methods
+
+extension CurriculumsUseCase {
 
   private func generateCourses(from curriculumCourses: Domain.CurriculumCourses) -> [[Domain.Course]] {
     var array: [[Domain.Course]] = self.initCourses()

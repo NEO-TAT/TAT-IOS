@@ -25,8 +25,12 @@ final class CurriculumViewModel: NSObject, ViewModelType {
     let courses: Observable<[[Course]]>
   }
 
+  // MARK: - Properties
+
   private let semesterViewModel: SemesterViewModel
   private let courseViewModel: CourseViewModel
+
+  // MARK: - Init
 
   override init() {
     semesterViewModel = SemesterViewModel()

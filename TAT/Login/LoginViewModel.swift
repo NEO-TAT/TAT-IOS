@@ -31,7 +31,11 @@ final class LoginViewModel: NSObject, ViewModelType {
     let state: Observable<State>
   }
 
+  // MARK: - Properties
+
   private let loginUseCase: Domain.LoginUseCase
+
+  // MARK: - Init
 
   override init() {
     let useCaseProvider = UseCaseProvider()

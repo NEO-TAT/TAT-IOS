@@ -11,6 +11,8 @@ import SnapKit
 
 final class CourseCell: UICollectionViewCell {
 
+  // MARK: - Properties
+
   private lazy var courseNameLabel: UILabel = {
     let courseNameLabel = UILabel(frame: .zero)
     courseNameLabel.text = ""
@@ -18,6 +20,8 @@ final class CourseCell: UICollectionViewCell {
     courseNameLabel.numberOfLines = 0
     return courseNameLabel
   }()
+
+  // MARK: - Init
 
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -29,15 +33,23 @@ final class CourseCell: UICollectionViewCell {
     fatalError("init(coder:) has not been implemented")
   }
 
+  // MARK: - Methods
+
   func configureCell(with courseName: String) {
     courseNameLabel.text = courseName
   }
 
+}
+
+// MARK: - Private Methods
+
+extension CourseCell {
+
   private func setUpLayout() {
-    addSubview(courseNameLabel)
-    courseNameLabel.snp.makeConstraints { (make) in
-      make.leading.trailing.top.bottom.equalTo(self)
-    }
-  }
+     addSubview(courseNameLabel)
+     courseNameLabel.snp.makeConstraints { (make) in
+       make.leading.trailing.top.bottom.equalTo(self)
+     }
+   }
 
 }

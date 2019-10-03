@@ -18,7 +18,11 @@ final class MainTabBarController: UITabBarController {
     setUpViewControllers()
   }
 
-  // MARK: - Private Methods
+}
+
+// MARK: - Private Methods
+
+extension MainTabBarController {
 
   private func setUpViewControllers() {
     let loginVC = UINavigationController(rootViewController: LoginViewController())

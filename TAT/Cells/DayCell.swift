@@ -11,12 +11,16 @@ import SnapKit
 
 final class DayCell: UICollectionViewCell {
 
+  // MARK: - Properties
+
   private lazy var dayLabel: UILabel = {
     let dayLabel = UILabel(frame: .zero)
     dayLabel.text = ""
     dayLabel.textAlignment = .center
     return dayLabel
   }()
+
+  // MARK: - Init
 
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -28,9 +32,17 @@ final class DayCell: UICollectionViewCell {
     fatalError("init(coder:) has not been implemented")
   }
 
+  // MARK: - Methods
+
   func configureCell(with day: String) {
     dayLabel.text = day
   }
+
+}
+
+// MARK: - Private Methods
+
+extension DayCell {
 
   private func setUpLayout() {
     addSubview(dayLabel)
@@ -38,4 +50,5 @@ final class DayCell: UICollectionViewCell {
       make.leading.trailing.top.bottom.equalTo(self)
     }
   }
+
 }
