@@ -21,7 +21,7 @@ final class CurriculumViewController: UIViewController {
   private let viewModel: CurriculumViewModel = CurriculumViewModel()
   private let searchButtonTapped = PublishSubject<Void>()
 
-  private var isSearchBarHidden: Bool = false {
+  private var isSearchBarHidden: Bool = true {
     didSet {
       searchBar.isHidden = self.isSearchBarHidden
       collectionView.snp.removeConstraints()
@@ -133,8 +133,12 @@ extension CurriculumViewController {
     output.state
       .subscribe(onNext: { [weak self] (state) in
         switch state {
-        case .loading: self?.activityIndicator.startAnimating()
-        default: self?.activityIndicator.stopAnimating()
+        case .loading:
+          self?.activityIndicator.startAnimating()
+          self?.leftBarItem.isEnabled = false
+        default:
+          self?.activityIndicator.stopAnimating()
+          self?.leftBarItem.isEnabled = true
         }
       }, onError: { (error) in
         print(error)
@@ -225,6 +229,7 @@ extension CurriculumViewController {
       make.leading.trailing.bottom.equalToSuperview()
     }
     collectionView.setContentOffset(.init(x: 0, y: 0), animated: false)
+    print("update collection")
   }
 
   private func generateLayout() -> UICollectionViewLayout {
