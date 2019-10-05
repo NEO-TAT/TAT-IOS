@@ -27,8 +27,9 @@
 		3B4329F1234657AE00789E32 /* NetworkProvvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4329F0234657AE00789E32 /* NetworkProvvider.swift */; };
 		3B4329F423465B8000789E32 /* LoginError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4329F323465B8000789E32 /* LoginError.swift */; };
 		3B4329F62346662100789E32 /* UIViewController+rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4329F52346662100789E32 /* UIViewController+rx.swift */; };
+		3B4329FB2348AA9F00789E32 /* CurriculumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4329FA2348AA9F00789E32 /* CurriculumViewController.swift */; };
+		3B4329FD23490AE600789E32 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4329FC23490AE600789E32 /* State.swift */; };
 		3B4DD4B2231F60BA0099BB58 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4DD4B1231F60BA0099BB58 /* LoginViewController.swift */; };
-		3B4DD4B5231F61B40099BB58 /* CurriculumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4DD4B4231F61B40099BB58 /* CurriculumViewController.swift */; };
 		3B4DD4B7231F64C80099BB58 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4DD4B6231F64C80099BB58 /* LoginViewModel.swift */; };
 		3B4DD4BE232383D10099BB58 /* ViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4DD4BD232383D10099BB58 /* ViewModelType.swift */; };
 		3B6D4F562316838E0010AFD3 /* CurriculumCourses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6D4F552316838E0010AFD3 /* CurriculumCourses.swift */; };
@@ -111,8 +112,9 @@
 		3B4329F0234657AE00789E32 /* NetworkProvvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkProvvider.swift; sourceTree = "<group>"; };
 		3B4329F323465B8000789E32 /* LoginError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginError.swift; sourceTree = "<group>"; };
 		3B4329F52346662100789E32 /* UIViewController+rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+rx.swift"; sourceTree = "<group>"; };
+		3B4329FA2348AA9F00789E32 /* CurriculumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurriculumViewController.swift; sourceTree = "<group>"; };
+		3B4329FC23490AE600789E32 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		3B4DD4B1231F60BA0099BB58 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		3B4DD4B4231F61B40099BB58 /* CurriculumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurriculumViewController.swift; sourceTree = "<group>"; };
 		3B4DD4B6231F64C80099BB58 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		3B4DD4BD232383D10099BB58 /* ViewModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelType.swift; sourceTree = "<group>"; };
 		3B6D4F552316838E0010AFD3 /* CurriculumCourses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurriculumCourses.swift; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 			isa = PBXGroup;
 			children = (
 				3B4329E0233905B100789E32 /* Week.swift */,
+				3B4329FC23490AE600789E32 /* State.swift */,
 			);
 			name = Enum;
 			sourceTree = "<group>";
@@ -271,6 +274,14 @@
 			path = Error;
 			sourceTree = "<group>";
 		};
+		3B4329F92348A9F200789E32 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				3B4329FA2348AA9F00789E32 /* CurriculumViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		3B4DD4B0231F60AC0099BB58 /* Login */ = {
 			isa = PBXGroup;
 			children = (
@@ -283,7 +294,7 @@
 		3B4DD4B3231F61A40099BB58 /* Curriculum */ = {
 			isa = PBXGroup;
 			children = (
-				3B4DD4B4231F61B40099BB58 /* CurriculumViewController.swift */,
+				3B4329F92348A9F200789E32 /* Controllers */,
 				3B4329D42338AD3B00789E32 /* Views */,
 				3B4329D32338AD2F00789E32 /* ViewModels */,
 			);
@@ -697,11 +708,12 @@
 				3B14479F232A6F5F004A1DA8 /* CurriculumViewModel.swift in Sources */,
 				3B4329D12338AA8E00789E32 /* IBPCollectionViewCompositionalLayoutInteroperability.swift in Sources */,
 				3B4329D92338AE3400789E32 /* WeekSection.swift in Sources */,
+				3B4329FD23490AE600789E32 /* State.swift in Sources */,
 				3B308F782310160B00278C11 /* MainTabBarController.swift in Sources */,
+				3B4329FB2348AA9F00789E32 /* CurriculumViewController.swift in Sources */,
 				3B308F762310160B00278C11 /* AppDelegate.swift in Sources */,
 				3B4329E523392CB500789E32 /* CourseCell.swift in Sources */,
 				3B4329CF2337DEAC00789E32 /* CourseViewModel.swift in Sources */,
-				3B4DD4B5231F61B40099BB58 /* CurriculumViewController.swift in Sources */,
 				3B4329D62338AD6C00789E32 /* DayCell.swift in Sources */,
 				3B4329F62346662100789E32 /* UIViewController+rx.swift in Sources */,
 				3B4DD4BE232383D10099BB58 /* ViewModelType.swift in Sources */,

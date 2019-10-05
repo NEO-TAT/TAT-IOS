@@ -16,10 +16,12 @@ final class SemesterViewModel: NSObject, ViewModelType {
 
   struct Input {
     let targetStudentId: Observable<String>
+    let searchTrigger: Observable<Void>
   }
 
   struct Output {
     let semesters: Observable<[Semester]>
+    let state: Observable<State>
   }
 
   // MARK: - Properties
@@ -37,23 +39,36 @@ final class SemesterViewModel: NSObject, ViewModelType {
 extension SemesterViewModel {
 
   func transform(input: SemesterViewModel.Input) -> SemesterViewModel.Output {
-    let semesters = input.targetStudentId
-      .filter { $0 != "" }
-      .flatMap(generateSemesters)
+    let cachedTargetStudentId = UserDefaults.standard.string(forKey: "studentId") ?? ""
+    let targetStudentIdOberable = Observable.merge(input.targetStudentId, Observable.just(cachedTargetStudentId))
+
+    let state = ReplaySubject<State>.create(bufferSize: 1)
+
+    let semesters = input.searchTrigger
+      .withLatestFrom(targetStudentIdOberable)
+      .do(onNext: { (targetStudentId) in
+        print("targetStudentId \(targetStudentId)")
+      })
+      .flatMap { [unowned self] (targetStudentId) -> Observable<[Semester]> in
+        state.onNext(.loading)
+        return self.generateSemesters(from: targetStudentId)
+      }
       .share()
 
     semesters
       .subscribe(onNext: { (semesters) in
+        state.onNext(.success)
         if UserDefaults.standard.object(forKey: "semesters") == nil {
           guard let semesters = try? JSONEncoder().encode(semesters) else { return }
           UserDefaults.standard.set(semesters, forKey: "semesters")
         }
       }, onError: { (error) in
+        state.onNext(.error(message: error.localizedDescription))
         print(error)
       })
       .disposed(by: rx.disposeBag)
 
-    return Output(semesters: semesters)
+    return Output(semesters: semesters, state: state.asObserver())
   }
 
 }
@@ -63,15 +78,7 @@ extension SemesterViewModel {
 extension SemesterViewModel {
 
   private func generateSemesters(from targetStudentId: String) -> Observable<[Semester]> {
-    guard let cachedTargetStudentId = UserDefaults.standard.string(forKey: "targetStudentId"),
-      cachedTargetStudentId == targetStudentId else {
-        UserDefaults.standard.set(targetStudentId, forKey: "targetStudentId")
-        return curriculumsUseCase.semesters(targetStudentId: targetStudentId).asObservable()
-    }
-    guard let cachedData = UserDefaults.standard.object(forKey: "semesters") as? Data,
-      let cachedSemesters = try? JSONDecoder().decode([Semester].self, from: cachedData)
-      else { fatalError("cannot cast to semesters") }
-    return .just(cachedSemesters)
+     return curriculumsUseCase.semesters(targetStudentId: targetStudentId).asObservable()
   }
 
 }

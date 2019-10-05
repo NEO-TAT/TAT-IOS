@@ -14,12 +14,6 @@ import RxCocoa
 
 final class CourseViewModel: NSObject, ViewModelType {
 
-  enum State {
-    case success
-    case loading
-    case error(message: String)
-  }
-
   struct Input {
     let year: Observable<String>
     let semester: Observable<String>
@@ -50,13 +44,18 @@ final class CourseViewModel: NSObject, ViewModelType {
 extension CourseViewModel {
 
   func transform(input: Input) -> Output {
+    let cachedTargetStudentId = UserDefaults.standard.string(forKey: "studentId") ?? ""
+    let targetStudentIdOberable = Observable.merge(input.targetStudentId, Observable.just(cachedTargetStudentId))
     let inputData = Observable.combineLatest(input.year,
                                              input.semester,
-                                             input.targetStudentId)
+                                             targetStudentIdOberable)
     let state = ReplaySubject<State>.create(bufferSize: 1)
 
     let courses = input.searchTrigger
       .withLatestFrom(inputData)
+      .do(onNext: { (year, semester, taregtStudentId) in
+        print("year \(year) semester \(semester) targetStudentId \(taregtStudentId)")
+      })
       .filter { $0 != "" && $1 != "" && $2 != "" }
       .flatMap { [unowned self] (year, semester, targetStudentId) -> Observable<[[Domain.Course]]> in
         state.onNext(.loading)
@@ -73,11 +72,11 @@ extension CourseViewModel {
         }
       }, onError: { (error) in
         print(error)
-        state.onNext(.error(message: "cannot get courses"))
+        state.onNext(.error(message: error.localizedDescription))
       })
       .disposed(by: rx.disposeBag)
 
-    return Output(state: state, courses: courses)
+    return Output(state: state.asObserver(), courses: courses)
   }
 
 }
@@ -87,13 +86,9 @@ extension CourseViewModel {
 extension CourseViewModel {
 
   private func generateCourses(year: String, semester: String, targetStudentId: String) -> Observable<[[Domain.Course]]> {
-    guard let cachedData = UserDefaults.standard.object(forKey: "courses") as? Data,
-      let cachedCourses = try? JSONDecoder().decode([[Domain.Course]].self, from: cachedData) else {
-      return self.curriculumsUseCase.courses(targetStudentId: targetStudentId,
-                                             year: year,
-                                             semester: semester).asObservable()
-    }
-    return .just(cachedCourses)
+    return self.curriculumsUseCase.courses(targetStudentId: targetStudentId,
+                                                 year: year,
+                                                 semester: semester).asObservable()
   }
 
 }

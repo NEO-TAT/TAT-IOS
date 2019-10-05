@@ -19,6 +19,15 @@ final class CurriculumViewController: UIViewController {
   // MARK: - Properties
 
   private let viewModel: CurriculumViewModel = CurriculumViewModel()
+  private let searchButtonTapped = PublishSubject<Void>()
+
+  private var isSearchBarHidden: Bool = true {
+    didSet {
+      searchBar.isHidden = self.isSearchBarHidden
+      collectionView.snp.removeConstraints()
+      setUpCollectionView()
+    }
+  }
 
   private lazy var activityIndicator: UIActivityIndicatorView = {
     let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
@@ -30,6 +39,16 @@ final class CurriculumViewController: UIViewController {
     return UIBarButtonItem(barButtonSystemItem: .search,
                            target: self,
                            action: nil)
+  }()
+
+  private lazy var searchBar: UISearchBar = {
+    let searchBar = UISearchBar(frame: .zero)
+    searchBar.backgroundColor = .white
+    searchBar.showsCancelButton = true
+    searchBar.delegate = self
+    let targetStudentId = UserDefaults.standard.string(forKey: "studentId") ?? "please store your feaking student id"
+    searchBar.placeholder = targetStudentId
+    return searchBar
   }()
 
   private lazy var collectionView: UICollectionView = {
@@ -60,7 +79,7 @@ final class CurriculumViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .yellow
+    view.backgroundColor = .red
     tabBarController?.title = "curriculum"
 
     setUpNavigationBarItems()
@@ -75,29 +94,51 @@ final class CurriculumViewController: UIViewController {
 extension CurriculumViewController {
 
   private func setUpNavigationBarItems() {
-    title = "curriculum"
     navigationItem.leftBarButtonItem = leftBarItem
   }
 
-  private func updateTitleView(by items: [String]) {
-    guard let navigationController = navigationController else { return }
+  private func updateTitleView(by items: [String]) -> TitleView? {
+    guard let navigationController = navigationController else { return nil }
     let titleView = TitleView(navigationController: navigationController,
                               title: items.first ?? "",
                               items: items)
     navigationItem.titleView = titleView
+    return titleView
   }
 
   private func bindViewModel() {
-    let searchTrigger = Observable.merge(rx.viewWillAppear, leftBarItem.rx.tap.asObservable())
-    let input = CurriculumViewModel.Input(targetStudentId: Observable.just("104440026"),
-                                          searchTrigger: searchTrigger)
+    let yearSubject: PublishSubject<String> = PublishSubject<String>()
+    let semesterSubject: PublishSubject<String> = PublishSubject<String>()
+    let searchSemesterSubject: BehaviorSubject<Void> = BehaviorSubject<Void>(value: ())
+    let searchCourseSubject: PublishSubject<Void> = PublishSubject<Void>()
+
+    var semesterIndex: Int = 0
+
+    searchSemesterSubject
+      .subscribe(onNext: { (_) in
+      print("search semester")
+    }).disposed(by: rx.disposeBag)
+
+    let input = CurriculumViewModel.Input(targetStudentId: searchBar.rx.text.orEmpty.asObservable(),
+                                          searchSemesterTrigger: searchSemesterSubject.asObserver(),
+                                          searchCourseTrigger: searchCourseSubject.asObserver(),
+                                          yearObserver: yearSubject.asObserver(),
+                                          semesterObserver: semesterSubject.asObserver())
     let output = viewModel.transform(input: input)
+
+    searchButtonTapped
+      .bind(to: searchSemesterSubject)
+      .disposed(by: rx.disposeBag)
 
     output.state
       .subscribe(onNext: { [weak self] (state) in
         switch state {
-        case .loading: self?.activityIndicator.startAnimating()
-        default: self?.activityIndicator.stopAnimating()
+        case .loading:
+          self?.activityIndicator.startAnimating()
+          self?.leftBarItem.isEnabled = false
+        default:
+          self?.activityIndicator.stopAnimating()
+          self?.leftBarItem.isEnabled = true
         }
       }, onError: { (error) in
         print(error)
@@ -107,13 +148,27 @@ extension CurriculumViewController {
     output.semesters
       .subscribe(onNext: { [weak self] (semesters) in
         let semsterString = semesters.map { "\($0.year) 學年 第\($0.semester)學期" }
-        self?.updateTitleView(by: semsterString)
+        let titleView = self?.updateTitleView(by: semsterString)
+        titleView?.action = { (index) in
+          semesterIndex = index
+          yearSubject.onNext(semesters[index].year)
+          semesterSubject.onNext(semesters[index].semester)
+          searchCourseSubject.onNext(())
+        }
+
+        let currentSemester = semesters[semesterIndex]
+        yearSubject.onNext(currentSemester.year)
+        semesterSubject.onNext(currentSemester.semester)
+        searchCourseSubject.onNext(())
       }, onError: { (error) in
           print(error)
       })
       .disposed(by: rx.disposeBag)
 
     output.courses
+      .do(onNext: { (_) in
+        print("get courses")
+      })
       .subscribe(onNext: { [weak self] (courses) in
         guard let self = self else { return }
         for (index, courses) in courses.enumerated() {
@@ -124,11 +179,30 @@ extension CurriculumViewController {
         print(error)
       })
       .disposed(by: rx.disposeBag)
+
+    leftBarItem.rx.tap
+      .subscribe(onNext: { [weak self] (_) in
+        guard let self = self else { return }
+        self.isSearchBarHidden = !self.isSearchBarHidden
+      }, onError: { (error) in
+          print(error)
+      })
+      .disposed(by: rx.disposeBag)
   }
 
   private func setUpLayouts() {
+    setUpSearchBar()
     setUpCollectionView()
     setUpActivityIndicator()
+  }
+
+  private func setUpSearchBar() {
+    view.addSubview(searchBar)
+    searchBar.snp.makeConstraints { (make) in
+      make.left.right.equalToSuperview()
+      make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+      make.height.equalTo(80)
+    }
   }
 
   private func setUpActivityIndicator() {
@@ -150,9 +224,12 @@ extension CurriculumViewController {
     view.addSubview(collectionView)
 
     collectionView.snp.makeConstraints { (make) in
-      make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+      let topAnchor = isSearchBarHidden ? view.safeAreaLayoutGuide.snp.top : searchBar.snp.bottom
+      make.top.equalTo(topAnchor)
       make.leading.trailing.bottom.equalToSuperview()
     }
+    collectionView.setContentOffset(.init(x: 0, y: 0), animated: false)
+    print("update collection")
   }
 
   private func generateLayout() -> UICollectionViewLayout {
@@ -186,3 +263,19 @@ extension CurriculumViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 
 extension CurriculumViewController: UICollectionViewDelegate {}
+
+// MARK: - UISearchBarDelegate
+
+extension CurriculumViewController: UISearchBarDelegate {
+
+  func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+    view.endEditing(true)
+  }
+
+  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    searchButtonTapped.onNext(())
+    isSearchBarHidden = true
+    view.endEditing(true)
+  }
+
+}
