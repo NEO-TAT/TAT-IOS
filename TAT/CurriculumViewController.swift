@@ -41,6 +41,10 @@ final class CurriculumViewController: UIViewController {
   private lazy var searchBar: UISearchBar = {
     let searchBar = UISearchBar(frame: .zero)
     searchBar.backgroundColor = .white
+    searchBar.showsCancelButton = true
+    searchBar.delegate = self
+    let targetStudentId = UserDefaults.standard.string(forKey: "studentId") ?? "please store your feaking student id"
+    searchBar.placeholder = targetStudentId
     return searchBar
   }()
 
@@ -220,3 +224,17 @@ extension CurriculumViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 
 extension CurriculumViewController: UICollectionViewDelegate {}
+
+// MARK: - UISearchBarDelegate
+
+extension CurriculumViewController: UISearchBarDelegate {
+
+  func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+    view.endEditing(true)
+  }
+
+  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    view.endEditing(true)
+  }
+
+}
