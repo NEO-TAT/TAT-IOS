@@ -14,12 +14,6 @@ import RxCocoa
 
 final class CourseViewModel: NSObject, ViewModelType {
 
-  enum State {
-    case success
-    case loading
-    case error(message: String)
-  }
-
   struct Input {
     let year: Observable<String>
     let semester: Observable<String>
@@ -78,11 +72,11 @@ extension CourseViewModel {
         }
       }, onError: { (error) in
         print(error)
-        state.onNext(.error(message: "cannot get courses"))
+        state.onNext(.error(message: error.localizedDescription))
       })
       .disposed(by: rx.disposeBag)
 
-    return Output(state: state, courses: courses)
+    return Output(state: state.asObserver(), courses: courses)
   }
 
 }
