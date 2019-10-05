@@ -19,6 +19,12 @@ final class CurriculumViewController: UIViewController {
   // MARK: - Properties
 
   private let viewModel: CurriculumViewModel = CurriculumViewModel()
+  private var isSearchBarHidden: Bool = false {
+    didSet {
+      collectionView.snp.removeConstraints()
+      setUpCollectionView()
+    }
+  }
 
   private lazy var activityIndicator: UIActivityIndicatorView = {
     let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
@@ -30,6 +36,12 @@ final class CurriculumViewController: UIViewController {
     return UIBarButtonItem(barButtonSystemItem: .search,
                            target: self,
                            action: nil)
+  }()
+
+  private lazy var searchBar: UISearchBar = {
+    let searchBar = UISearchBar(frame: .zero)
+    searchBar.backgroundColor = .white
+    return searchBar
   }()
 
   private lazy var collectionView: UICollectionView = {
@@ -60,7 +72,7 @@ final class CurriculumViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .yellow
+    view.backgroundColor = .red
     tabBarController?.title = "curriculum"
 
     setUpNavigationBarItems()
@@ -88,7 +100,7 @@ extension CurriculumViewController {
   }
 
   private func bindViewModel() {
-    let searchTrigger = Observable.merge(rx.viewWillAppear, leftBarItem.rx.tap.asObservable())
+    let searchTrigger = Observable.merge(rx.viewWillAppear, leftBarItem.rx.tap.asObservable()).share()
     let input = CurriculumViewModel.Input(targetStudentId: Observable.just("104440026"),
                                           searchTrigger: searchTrigger)
     let output = viewModel.transform(input: input)
@@ -124,11 +136,31 @@ extension CurriculumViewController {
         print(error)
       })
       .disposed(by: rx.disposeBag)
+
+    searchTrigger
+      .subscribe(onNext: { [weak self] (_) in
+        guard let self = self else { return }
+        self.isSearchBarHidden = !self.isSearchBarHidden
+        self.searchBar.isHidden = self.isSearchBarHidden
+      }, onError: { (error) in
+          print(error)
+      })
+      .disposed(by: rx.disposeBag)
   }
 
   private func setUpLayouts() {
+    setUpSearchBar()
     setUpCollectionView()
     setUpActivityIndicator()
+  }
+
+  private func setUpSearchBar() {
+    view.addSubview(searchBar)
+    searchBar.snp.makeConstraints { (make) in
+      make.left.right.equalToSuperview()
+      make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+      make.height.equalTo(80)
+    }
   }
 
   private func setUpActivityIndicator() {
@@ -150,9 +182,11 @@ extension CurriculumViewController {
     view.addSubview(collectionView)
 
     collectionView.snp.makeConstraints { (make) in
-      make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+      let topAnchor = isSearchBarHidden ? view.safeAreaLayoutGuide.snp.top : searchBar.snp.bottom
+      make.top.equalTo(topAnchor)
       make.leading.trailing.bottom.equalToSuperview()
     }
+    collectionView.setContentOffset(.init(x: 0, y: 0), animated: false)
   }
 
   private func generateLayout() -> UICollectionViewLayout {
