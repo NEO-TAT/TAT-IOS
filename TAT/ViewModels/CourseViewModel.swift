@@ -92,17 +92,9 @@ extension CourseViewModel {
 extension CourseViewModel {
 
   private func generateCourses(year: String, semester: String, targetStudentId: String) -> Observable<[[Domain.Course]]> {
-
-    guard let cachedTargetStudentId = UserDefaults.standard.string(forKey: "studentId"),
-      cachedTargetStudentId == targetStudentId,
-      let cachedData = UserDefaults.standard.object(forKey: "courses") as? Data,
-      let cachedCourses = try? JSONDecoder().decode([[Domain.Course]].self, from: cachedData)else {
-        return self.curriculumsUseCase.courses(targetStudentId: targetStudentId,
-                                              year: year,
-                                              semester: semester).asObservable()
-    }
-
-    return .just(cachedCourses)
+    return self.curriculumsUseCase.courses(targetStudentId: targetStudentId,
+                                                 year: year,
+                                                 semester: semester).asObservable()
   }
 
 }

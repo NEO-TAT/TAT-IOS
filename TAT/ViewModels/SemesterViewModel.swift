@@ -70,14 +70,7 @@ extension SemesterViewModel {
 extension SemesterViewModel {
 
   private func generateSemesters(from targetStudentId: String) -> Observable<[Semester]> {
-    guard let cachedTargetStudentId = UserDefaults.standard.string(forKey: "studentId"),
-      cachedTargetStudentId == targetStudentId,
-      let cachedData = UserDefaults.standard.object(forKey: "semesters") as? Data,
-      let cachedSemesters = try? JSONDecoder().decode([Semester].self, from: cachedData)else {
-        return curriculumsUseCase.semesters(targetStudentId: targetStudentId).asObservable()
-      }
-
-    return .just(cachedSemesters)
+     return curriculumsUseCase.semesters(targetStudentId: targetStudentId).asObservable()
   }
 
 }

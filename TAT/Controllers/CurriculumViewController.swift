@@ -19,6 +19,8 @@ final class CurriculumViewController: UIViewController {
   // MARK: - Properties
 
   private let viewModel: CurriculumViewModel = CurriculumViewModel()
+  private let searchButtonTapped = PublishSubject<Void>()
+
   private var isSearchBarHidden: Bool = false {
     didSet {
       searchBar.isHidden = self.isSearchBarHidden
@@ -26,7 +28,6 @@ final class CurriculumViewController: UIViewController {
       setUpCollectionView()
     }
   }
-  private let searchButtonTapped = PublishSubject<Void>()
 
   private lazy var activityIndicator: UIActivityIndicatorView = {
     let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
@@ -93,23 +94,41 @@ final class CurriculumViewController: UIViewController {
 extension CurriculumViewController {
 
   private func setUpNavigationBarItems() {
-    title = "curriculum"
     navigationItem.leftBarButtonItem = leftBarItem
   }
 
-  private func updateTitleView(by items: [String]) {
-    guard let navigationController = navigationController else { return }
+  private func updateTitleView(by items: [String]) -> TitleView? {
+    guard let navigationController = navigationController else { return nil }
     let titleView = TitleView(navigationController: navigationController,
                               title: items.first ?? "",
                               items: items)
     navigationItem.titleView = titleView
+    return titleView
   }
 
   private func bindViewModel() {
-    let searchTrigger = Observable.merge(rx.viewWillAppear, searchButtonTapped.asObserver())
+    let yearSubject: PublishSubject<String> = PublishSubject<String>()
+    let semesterSubject: PublishSubject<String> = PublishSubject<String>()
+    let searchSemesterSubject: BehaviorSubject<Void> = BehaviorSubject<Void>(value: ())
+    let searchCourseSubject: PublishSubject<Void> = PublishSubject<Void>()
+
+    var semesterIndex: Int = 0
+
+    searchSemesterSubject
+      .subscribe(onNext: { (_) in
+      print("search semester")
+    }).disposed(by: rx.disposeBag)
+
     let input = CurriculumViewModel.Input(targetStudentId: searchBar.rx.text.orEmpty.asObservable(),
-                                          searchTrigger: searchTrigger)
+                                          searchSemesterTrigger: searchSemesterSubject.asObserver(),
+                                          searchCourseTrigger: searchCourseSubject.asObserver(),
+                                          yearObserver: yearSubject.asObserver(),
+                                          semesterObserver: semesterSubject.asObserver())
     let output = viewModel.transform(input: input)
+
+    searchButtonTapped
+      .bind(to: searchSemesterSubject)
+      .disposed(by: rx.disposeBag)
 
     output.state
       .subscribe(onNext: { [weak self] (state) in
@@ -123,12 +142,20 @@ extension CurriculumViewController {
       .disposed(by: rx.disposeBag)
 
     output.semesters
-      .do(onNext: { (_) in
-        print("get semesters")
-      })
       .subscribe(onNext: { [weak self] (semesters) in
         let semsterString = semesters.map { "\($0.year) 學年 第\($0.semester)學期" }
-        self?.updateTitleView(by: semsterString)
+        let titleView = self?.updateTitleView(by: semsterString)
+        titleView?.action = { (index) in
+          semesterIndex = index
+          yearSubject.onNext(semesters[index].year)
+          semesterSubject.onNext(semesters[index].semester)
+          searchCourseSubject.onNext(())
+        }
+
+        let currentSemester = semesters[semesterIndex]
+        yearSubject.onNext(currentSemester.year)
+        semesterSubject.onNext(currentSemester.semester)
+        searchCourseSubject.onNext(())
       }, onError: { (error) in
           print(error)
       })

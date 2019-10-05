@@ -16,7 +16,10 @@ final class CurriculumViewModel: NSObject, ViewModelType {
 
   struct Input {
     let targetStudentId: Observable<String>
-    let searchTrigger: Observable<Void>
+    let searchSemesterTrigger: Observable<Void>
+    let searchCourseTrigger: Observable<Void>
+    let yearObserver: Observable<String>
+    let semesterObserver: Observable<String>
   }
 
   struct Output {
@@ -44,14 +47,13 @@ final class CurriculumViewModel: NSObject, ViewModelType {
 extension CurriculumViewModel {
 
   func transform(input: Input) -> Output {
-    let semesterInput = SemesterViewModel.Input(targetStudentId: input.targetStudentId, searchTrigger: input.searchTrigger)
-
+    let semesterInput = SemesterViewModel.Input(targetStudentId: input.targetStudentId, searchTrigger: input.searchSemesterTrigger)
     let semesterOutput = semesterViewModel.transform(input: semesterInput)
 
-    let courseInput = CourseViewModel.Input(year: Observable.just("108"),
-                                            semester: Observable.just("1"),
+    let courseInput = CourseViewModel.Input(year: input.yearObserver,
+                                            semester: input.semesterObserver,
                                             targetStudentId: input.targetStudentId,
-                                            searchTrigger: input.searchTrigger)
+                                            searchTrigger: input.searchCourseTrigger)
     let courseOutput = courseViewModel.transform(input: courseInput)
     return Output(state: courseOutput.state,
                   semesters: semesterOutput.semesters,
