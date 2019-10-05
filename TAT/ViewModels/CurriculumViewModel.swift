@@ -44,7 +44,7 @@ final class CurriculumViewModel: NSObject, ViewModelType {
 extension CurriculumViewModel {
 
   func transform(input: Input) -> Output {
-    let semesterInput = SemesterViewModel.Input(targetStudentId: input.targetStudentId)
+    let semesterInput = SemesterViewModel.Input(targetStudentId: input.targetStudentId, searchTrigger: input.searchTrigger)
 
     let semesterOutput = semesterViewModel.transform(input: semesterInput)
 

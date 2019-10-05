@@ -21,10 +21,12 @@ final class CurriculumViewController: UIViewController {
   private let viewModel: CurriculumViewModel = CurriculumViewModel()
   private var isSearchBarHidden: Bool = false {
     didSet {
+      searchBar.isHidden = self.isSearchBarHidden
       collectionView.snp.removeConstraints()
       setUpCollectionView()
     }
   }
+  private let searchButtonTapped = PublishSubject<Void>()
 
   private lazy var activityIndicator: UIActivityIndicatorView = {
     let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
@@ -104,8 +106,8 @@ extension CurriculumViewController {
   }
 
   private func bindViewModel() {
-    let searchTrigger = Observable.merge(rx.viewWillAppear, leftBarItem.rx.tap.asObservable()).share()
-    let input = CurriculumViewModel.Input(targetStudentId: Observable.just("104440026"),
+    let searchTrigger = Observable.merge(rx.viewWillAppear, searchButtonTapped.asObserver())
+    let input = CurriculumViewModel.Input(targetStudentId: searchBar.rx.text.orEmpty.asObservable(),
                                           searchTrigger: searchTrigger)
     let output = viewModel.transform(input: input)
 
@@ -121,6 +123,9 @@ extension CurriculumViewController {
       .disposed(by: rx.disposeBag)
 
     output.semesters
+      .do(onNext: { (_) in
+        print("get semesters")
+      })
       .subscribe(onNext: { [weak self] (semesters) in
         let semsterString = semesters.map { "\($0.year) 學年 第\($0.semester)學期" }
         self?.updateTitleView(by: semsterString)
@@ -130,6 +135,9 @@ extension CurriculumViewController {
       .disposed(by: rx.disposeBag)
 
     output.courses
+      .do(onNext: { (_) in
+        print("get courses")
+      })
       .subscribe(onNext: { [weak self] (courses) in
         guard let self = self else { return }
         for (index, courses) in courses.enumerated() {
@@ -141,11 +149,10 @@ extension CurriculumViewController {
       })
       .disposed(by: rx.disposeBag)
 
-    searchTrigger
+    leftBarItem.rx.tap
       .subscribe(onNext: { [weak self] (_) in
         guard let self = self else { return }
         self.isSearchBarHidden = !self.isSearchBarHidden
-        self.searchBar.isHidden = self.isSearchBarHidden
       }, onError: { (error) in
           print(error)
       })
@@ -234,6 +241,8 @@ extension CurriculumViewController: UISearchBarDelegate {
   }
 
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    searchButtonTapped.onNext(())
+    isSearchBarHidden = true
     view.endEditing(true)
   }
 
